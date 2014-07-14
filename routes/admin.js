@@ -40,7 +40,7 @@ exports.memelist = function(db) {
        var fileObj = {
         'filename' : fileName
        }
-       fs.rename(oldPath, 'public/bg/' + fileName, function (err) {
+       fs.rename(oldPath, __dirname + 'public/bg/' + fileName, function (err) {
         db.collection('imglist').insert(fileObj, function(err, result){
          res.redirect('back');
         });
@@ -57,7 +57,7 @@ exports.memelist = function(db) {
        var fileObj = {
         'filename' : fileName
        }
-       fs.rename(oldPath, 'public/icons/' + fileName, function (err) {
+       fs.rename(oldPath, __dirname + 'public/icons/' + fileName, function (err) {
         db.collection('iconlist').insert(fileObj, function(err, result){
          res.redirect('back');
         });
