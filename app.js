@@ -1,20 +1,25 @@
-#!/bin/env node
-//  OpenShift sample Node application
-var express = require('express');
-var nodemailer = require('nodemailer');
-var routes = require('./routes');
-var user = require('./routes/user');
-var meme = require('./routes/meme');
-var admin = require('./routes/admin');
-var errors = require('./routes/error');
-var bg = require('./routes/bg');
-var images = require('./routes/images');
-var http = require('http');
-var path = require('path');
-var fs = require('fs');
+/**
+ * Module dependencies.
+ */
+
+ var express = require('express');
+ var nodemailer = require('nodemailer');
+ var routes = require('./routes');
+ var user = require('./routes/user');
+ var meme = require('./routes/meme');
+ var admin = require('./routes/admin');
+ var errors = require('./routes/error');
+ var bg = require('./routes/bg');
+ var images = require('./routes/images');
+ var http = require('http');
+ var path = require('path');
+ var fs = require('fs');
+
+// Database
 
 var mongo = require('mongoskin');
-var db = mongo.db("mongodb://colpan:yoshi1@novus.modulusmongo.net:27017/edyGyq7u", {native_parser:true});
+// var db = mongo.db("mongodb://colpan:yoshi1@novus.modulusmongo.net:27017/edyGyq7u", {native_parser:true});
+var db = mongo.db("mongodb://localhost:27017/memeappdev", {native_parser:true});
 
 var app = express();
 
@@ -42,7 +47,7 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
   auth: {
     user: "colpanius@gmail.com",
     pass: "iamjessica1"
-}
+  }
 });
 
 /* Define all the pages */
@@ -113,24 +118,23 @@ app.post('/email-recovery', function(req,res,next){
     subject: "Labkit Password Recovery", // Subject line
     text: "Hello, please use the link below to change your password: http://www.labkit.com/changepw?id=" + req.body.username, // plaintext body
     html: "<b>Hello, please use the link below to change your password: <br /><a href='http://www.labkit.com/changepw?id=" + req.body.username + "'>Click Here</a></b>" // html body
-}
-smtpTransport.sendMail(mailOptions, function(error, response){
+  }
+  smtpTransport.sendMail(mailOptions, function(error, response){
     if(error){
       console.log(error);
-  }else{
+    }else{
       console.log("Message sent: " + response.message);
       return;
-  }
+    }
 
     // if you don't want to use this transport object anymore, uncomment following line
     // smtpTransport.close(); // shut down the connection pool, no more messages
-});
+  });
 });
 
 /* End RESTful actions */
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-var serverip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
-http.createServer(app).listen(port, serverip, function(){
+var port = process.env.PORT || 8000;
+http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + port);
 });
 

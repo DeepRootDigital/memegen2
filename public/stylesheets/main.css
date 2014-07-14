@@ -1,0 +1,224 @@
+@import 'signinup.css';
+@import 'mainmenu.css';
+@import 'frontpage.css';
+@import 'home.css';
+@import 'create.css';
+
+/* General CSS */
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration:none;
+}
+
+button {
+  float:left;
+  width:45%;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  margin-top: 0;
+  margin-right: 5px;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #333;
+  background-color:#ffffff;
+}
+
+button:hover {
+  /*color: #333;
+  background-color: #ebebeb;
+  border-color:#adadad;
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+  box-shadow: inset 0 3px 5px rgba(0,0,0,.125);*/
+}
+
+.options-panel {
+  height:0px;
+  overflow:hidden;
+  width:100%;
+  float:left;
+}
+
+.row {
+  width:100%;
+  margin:5px 0px;
+}
+
+.options-container .row {
+  margin: 5px 0px;
+}
+
+.form-control {
+  display: block;
+  float:left;
+  width: 50%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #000;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.options-container ul li .form-control {
+  color: #fff;
+}
+
+.options-container ul li select.form-control {
+  color: #000;
+}
+
+textarea.form-control {
+  width:100%;
+  height: 40px;
+  resize: none;
+  /*height:60px;*/
+}
+
+/* Meme Maker Page */
+
+.content-container {
+  width:100%;
+  min-width:1000px;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+  box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+  float:left;
+}
+
+.mememaker-left {
+  width:75%;
+  float:left;
+  padding:.5%;
+  margin-left:25%;
+}
+
+.options-container-single {
+  float: left;
+  padding: 4%;
+  border: 1px solid #adadad;
+  border-radius: 5px;
+  width:100%;
+}
+
+input[type="file"] {
+  border:0;
+  padding:0;
+}
+
+.mememaker-left > div > div {
+  border:1px solid #adadad;
+}
+
+.dropzone-previews {
+  display:none;
+}
+
+/* Home Designs */
+
+.home-icon {
+  width:20%;
+  height:200px;
+  float:left;
+  border:1px solid #000;
+  border-radius:5px;
+  text-align:center;
+  font-size: 30px;
+  color: rgb(48, 115, 236);
+  padding: 75px 5% 0 5%;
+  line-height: 30px;
+}
+
+.home-icon-wide {
+  width:30%;
+  margin:0 10%;
+  height:200px;
+  float:left;
+  border:1px solid #000;
+  border-radius:5px;
+  text-align:center;
+  font-size: 30px;
+  color: rgb(48, 115, 236);
+  padding: 65px 5% 0 5%;
+  line-height: 30px;
+  cursor:pointer;
+}
+
+.preset-menu {
+  width: 30%;
+  position: absolute;
+  margin-left: -5.1%;
+  margin-top: 104px;
+  height:0;
+  overflow:hidden;
+}
+
+.preset-menu p {
+  float:left;
+}
+
+.active-container > div {
+  display:none;
+}
+
+div.updatecanvas {
+  display:block;
+}
+
+#error-box {
+  width:300px;
+  position:fixed;
+  height:200px;
+  left:0;
+  top:200px;
+  z-index: 9999999999;
+  background: rgb(35, 119, 95);
+  padding:25px;
+  margin-left:-300px;
+}
+
+#error-box input, #error-box textarea {
+  color:rgb(0,0,0);
+}
+
+.error-tab {
+  width:50px;
+  height:100px;
+  top:0;
+  position:absolute;
+  margin-left:275px;
+  background:rgb(35,119,95);
+  padding-top:10px;
+  cursor:pointer;
+}
+
+.error-tab p {
+  -webkit-transform: rotate(90deg); 
+  -moz-transform: rotate(90deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+}
