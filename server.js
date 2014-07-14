@@ -1,7 +1,6 @@
 #!/bin/env node
 //  OpenShift sample Node application
 var express = require('express');
-var nodemailer = require('nodemailer');
 var routes = require('./routes');
 var user = require('./routes/user');
 var meme = require('./routes/meme');
@@ -32,20 +31,6 @@ app.use(express.bodyParser({keepExtensions:true,uploadDir:__dirname+'/public/ico
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-}
-
-// Mailer function
-
-var smtpTransport = nodemailer.createTransport("SMTP",{
-  service: "Gmail",
-  auth: {
-    user: "colpanius@gmail.com",
-    pass: "iamjessica1"
-}
-});
 
 /* Define all the pages */
 
@@ -106,35 +91,8 @@ app.post('/updatememe', meme.updateMeme(db));
 app.post('/updateuserlevel', admin.changeuser(db));
 app.post('/adminlog', admin.adminlog(db));
 
-// Main Actions
-
-app.post('/email-recovery', function(req,res,next){
-  var mailOptions = {
-    from: "Do Not Reply <donotreply@businesslabkit.com>", // sender address
-    to: req.body.email, // list of receivers
-    subject: "Labkit Password Recovery", // Subject line
-    text: "Hello, please use the link below to change your password: http://www.labkit.com/changepw?id=" + req.body.username, // plaintext body
-    html: "<b>Hello, please use the link below to change your password: <br /><a href='http://www.labkit.com/changepw?id=" + req.body.username + "'>Click Here</a></b>" // html body
-}
-smtpTransport.sendMail(mailOptions, function(error, response){
-    if(error){
-      console.log(error);
-  }else{
-      console.log("Message sent: " + response.message);
-      return;
-  }
-
-    // if you don't want to use this transport object anymore, uncomment following line
-    // smtpTransport.close(); // shut down the connection pool, no more messages
-});
-});
 
 /* End RESTful actions */
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-var serverip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 http.createServer(app).listen(app.get('port'), app.get('ip'), function(){
-  console.log('Express server listening on port ' + port);
+  console.log('Express server listening on port ' + app.get('port'));
 });
-
-//
-app.listen(port);

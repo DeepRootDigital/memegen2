@@ -30,8 +30,7 @@
     "mongodb": "*",
     "mongoskin": "*",
     "ejs": "*",
-    "bcrypt": "*",
-    "nodemailer": "*"
+    "bcrypt": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
