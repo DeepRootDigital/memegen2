@@ -36,7 +36,7 @@ exports.iconList = function(db) {
         'username' : usern,
         'savename' : savename
        }
-       fs.rename(oldPath, __dirname + 'public/bg/' + savename, function (err) {
+       fs.rename(oldPath, 'public/bg/' + savename, function (err) {
         db.collection('imglist').insert(fileObj, function(err, result){
          res.redirect('back');
         });
@@ -57,7 +57,7 @@ exports.iconList = function(db) {
         'username' : usern,
         'savename' : savename
        }
-       fs.rename(oldPath, __dirname + 'public/icons/' + savename, function (err) {
+       fs.rename(oldPath, 'public/icons/' + savename, function (err) {
         db.collection('iconlist').insert(fileObj, function(err, result){
           res.end();
         });
