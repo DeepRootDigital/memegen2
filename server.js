@@ -13,7 +13,7 @@ var path = require('path');
 var fs = require('fs');
 
 var mongo = require('mongoskin');
-var db = mongo.db("mongodb://colpan:yoshi1@novus.modulusmongo.net:27017/edyGyq7u", {native_parser:true});
+var db = mongo.db("mongodb://bmswombat:fvps123@ds055689.mongolab.com:55689/meme", {native_parser:true});
 
 var app = express();
 
