@@ -15,7 +15,7 @@ $(document).ready(function(){
 		});
 	}
 
-	$('#arrow').click(function(event){
+/*	$('#arrow').click(function(event){
 		event.preventDefault();
 		var form = $('.form');
 		var label = $('label');
@@ -160,7 +160,7 @@ else if ($(label).text() == 'Retype Password') {
 			$('.error-box').text('Please enter something.');
 			$('.error-box').css('display','block');
 		}
-	});
+	}); */
 
 /*
 	// Script to register a new user
