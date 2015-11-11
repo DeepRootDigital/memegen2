@@ -15,14 +15,14 @@ $(document).ready(function(){
 		});
 	}
 
-/*	$('#arrow').click(function(event){
+$('#arrow').click(function(event){
 		event.preventDefault();
 		var form = $('.form');
 		var label = $('label');
 		var progress = $('.progress-bar');
 		
 		if ($('.arrow').parent().find('#input').val() || $('.arrow').parent().find('#password').val()) {
-			if ($('.name').text() == 'Name') {
+			if ($('.name').text() == 'Username') {
 				$.getJSON( '/userlist', function( data ) {
 					var inuse = 1;
 					$.each(data, function(){
@@ -160,7 +160,7 @@ else if ($(label).text() == 'Retype Password') {
 			$('.error-box').text('Please enter something.');
 			$('.error-box').css('display','block');
 		}
-	}); */
+	});
 
 /*
 	// Script to register a new user
