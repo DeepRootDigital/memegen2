@@ -144,10 +144,24 @@ $(document).ready(function(){
 
 });
 
-function closecontainers() {
+function closecontainers(type) {
   $('.submenu-container').each(function(){
     if ($(this).attr('class').split(' ').length > 1) {
       $(this).attr('class','submenu-container');
     }
   });
+
+  switch(type){
+    case "textBox":
+      $('.addtextarea .click-container').find('.submenu-container').addClass('textb');
+      break;
+    case "box":
+      $('.addshape .click-container').find('.submenu-container').addClass('box');
+      break;
+    case "line":
+      $('.addline .click-container').find('.submenu-container').addClass('lines');
+      break;
+    default:
+      break;
+  }
 };

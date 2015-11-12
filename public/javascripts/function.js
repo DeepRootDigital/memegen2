@@ -6,6 +6,7 @@ var canvas = new fabric.Canvas('c');
 var memeListData = [];
 var activeObject;
 var templatename;
+var objectsOnCanvas = [];
 
 $(document).ready(function(){
 	// Open new tab with image to be saved
@@ -27,6 +28,9 @@ $(document).ready(function(){
   canvasBindings();
   activeObjects();
 
+  // Code for testing the array of objects on the canvas
+  //setInterval(function(){console.log("Current Num Objects" + objectsOnCanvas.length);}, 1000);
+
   // Bring activeObject forward
   $('.bringforward').click(function(){
     canvas.bringForward(activeObject);
@@ -44,6 +48,11 @@ $(document).ready(function(){
       event.preventDefault();
       if (activeObject) {
         canvas.remove(activeObject);
+        var index = objectsOnCanvas.indexOf(activeObject);
+        if(index != -1) {
+          objectsOnCanvas.splice(index,1);
+          removeObject(index);
+        }
       }
     }
   };
@@ -120,6 +129,8 @@ function canvasBindings() {
   $('#addshape-box').on('click', addBox);
   // Update box of active object
   $('#updatebox').on('click', updateBox);
+  // Click to clear the canvas
+  $('#canvas-clear').on('click', clearCanvas);
 };
 
 // Function to save the meme that is fired on clicking button
@@ -372,15 +383,20 @@ function addText(event) {
     textsize = 12;
   }
   var textlh = parseInt(textsize * 1.2);
-  var newtext = new fabric.IText(textcontent, {
+  var newText = new fabric.IText(textcontent, {
     fontFamily: 'Helvetica',
     fontSize: textsize,
     fill: textcolor,
     lineHeight: 1,
     id: idnum
   });
-  canvas.add(newtext);
+  canvas.add(newText);
   window.textcount = window.textcount + 1;
+  closecontainers("textBox");
+  canvas.setActiveObject(newText);
+  objectsOnCanvas.push(newText);
+  var textname = "Text " + window.textcount;
+  addObject(textname, objectsOnCanvas.length-1);
 }
 
 function updateText(event) {
@@ -418,6 +434,11 @@ function addLine(){
   newShape.set('id',idnum);
   canvas.add(newShape);
   window.linecount += 1;
+  closecontainers("line");
+  canvas.setActiveObject(newShape);
+  objectsOnCanvas.push(newShape);
+  var shapeName = "Line " + window.linecount;
+  addObject(shapeName, objectsOnCanvas.length-1);
 }
 
 function updateLine() {
@@ -456,6 +477,11 @@ function addBox(){
   newShape.set('id',idnum);
   canvas.add(newShape);
   window.boxcount += 1;
+  closecontainers("box");
+  canvas.setActiveObject(newShape);
+  objectsOnCanvas.push(newShape);
+  var boxName = "Box " + window.boxcount;
+  addObject(boxName, objectsOnCanvas.length-1);
 }
 
 function updateBox() {
@@ -517,6 +543,18 @@ function socialLoad() {
   
 }
 
+function clearCanvas() {
+  canvas.clear().renderAll();
+  canvas.setBackgroundImage = 0;
+  canvas.setBackgroundColor('rgba(0,0,0,0)', canvas.renderAll.bind(canvas));
+
+   // Remove all items from the object array
+  var len = objectsOnCanvas.length;
+  console.log(len);
+  document.getElementById("objects-on-canvas").innerHTML = "";
+  objectsOnCanvas.length = 0;
+}
+
 function sizecanvas(width,height) {
   $('.canvas-container').css('width',width+'px');
   $('.canvas-container').css('height',height+'px');
@@ -531,3 +569,37 @@ function sizecanvas(width,height) {
   canvas.width = width;
   canvas.height = height;
 }
+
+function addObject(object, index) {
+  var ul = document.getElementById("objects-on-canvas");
+  var li = document.createElement("li");
+  li.appendChild(document.createTextNode(object));
+  li.setAttribute("id", index);
+  li.setAttribute("onclick", "selectObject(id)");
+  ul.appendChild(li);
+}
+
+function removeObject(index) {
+  var ul = document.getElementById("objects-on-canvas");
+  var children = ul.children;
+  ul.removeChild(children[index]);
+  adjustIds(index);
+}
+
+function selectObject(object)
+{
+  canvas.setActiveObject(objectsOnCanvas[object]);
+}
+
+function adjustIds(index)
+{
+  var ul = document.getElementById("objects-on-canvas");
+  var children = ul.children;
+  for(i = index ; i < objectsOnCanvas.length; i++) {
+    var prevID = children[i].getAttribute("id");
+    var newIndex = prevID - 1;
+    children[i].setAttribute("id", newIndex);
+  }
+}
+
+

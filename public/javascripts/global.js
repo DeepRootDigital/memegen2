@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	// Determine the logged in user and display their username
-	//loggedinUser();
+	loggedinUser();
 	ifAdmin();
 
 	// Logout function
