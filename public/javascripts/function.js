@@ -7,6 +7,27 @@ var memeListData = [];
 var activeObject;
 var templatename;
 var objectsOnCanvas = [];
+var lockedObjs = [];
+
+// Default Object class
+function Obj(obj, objType) {
+  this.obj = obj;
+  this.objType = objType;
+  this.isLocked = false;
+  this.lockIndex = -1;
+}
+
+// Creating LockedObjects class
+function LockedObject(objects, index) {
+  objects = objects;
+  index = index;
+}
+
+
+// Accessors
+function getIsLocked() {
+  return this.isLocked;
+}
 
 $(document).ready(function(){
 	// Open new tab with image to be saved
@@ -33,13 +54,17 @@ $(document).ready(function(){
 
   // Bring activeObject forward
   $('.bringforward').click(function(){
+    var active = activeObject;
     canvas.bringForward(activeObject);
     canvas.deactivateAllWithDispatch().renderAll();
+    canvas.setActiveObject(active);
   });
   // Send activeObject back
   $('.sendbackward').click(function(){
+    var active = activeObject;
     canvas.sendBackwards(activeObject);
     canvas.deactivateAllWithDispatch().renderAll();
+    canvas.setActiveObject(active);
   });
 
   // Add delete function for active objects
@@ -48,7 +73,15 @@ $(document).ready(function(){
       event.preventDefault();
       if (activeObject) {
         canvas.remove(activeObject);
-        var index = objectsOnCanvas.indexOf(activeObject);
+
+        var index = -1;
+        for(i = 0; i < objectsOnCanvas.length; i++) {
+          if(objectsOnCanvas[i].obj == activeObject) {
+            index = i;
+            break;
+          }
+        }
+
         if(index != -1) {
           objectsOnCanvas.splice(index,1);
           removeObject(index);
@@ -131,6 +164,8 @@ function canvasBindings() {
   $('#updatebox').on('click', updateBox);
   // Click to clear the canvas
   $('#canvas-clear').on('click', clearCanvas);
+  // Lock item button
+  $('#lock-objects').on('click', lockObjects)
 };
 
 // Function to save the meme that is fired on clicking button
@@ -394,7 +429,9 @@ function addText(event) {
   window.textcount = window.textcount + 1;
   closecontainers("textBox");
   canvas.setActiveObject(newText);
-  objectsOnCanvas.push(newText);
+
+  var newObj = new Obj(newText, "Text");
+  objectsOnCanvas.push(newObj);
   var textname = "Text " + window.textcount;
   addObject(textname, objectsOnCanvas.length-1);
 }
@@ -436,14 +473,17 @@ function addLine(){
   window.linecount += 1;
   closecontainers("line");
   canvas.setActiveObject(newShape);
-  objectsOnCanvas.push(newShape);
+
+  var newObj = new Obj(newShape, "Line");
+  objectsOnCanvas.push(newObj);
   var shapeName = "Line " + window.linecount;
   addObject(shapeName, objectsOnCanvas.length-1);
 }
 
 function updateLine() {
   var newlinecolor = document.getElementById('updateline-color').value;
-  newlinecolor = "#" + newlinecolor;
+  if(newlinecolor[0] != '#')
+    newlinecolor = "#" + newlinecolor;
   var newlinelw = parseInt(document.getElementById('updateline-lw').value);
   if (canvas.backgroundColor) {
     var backgroundcolor = canvas.backgroundColor;
@@ -479,14 +519,17 @@ function addBox(){
   window.boxcount += 1;
   closecontainers("box");
   canvas.setActiveObject(newShape);
-  objectsOnCanvas.push(newShape);
+
+  var newObj = new Obj(newShape, "Box");
+  objectsOnCanvas.push(newObj);
   var boxName = "Box " + window.boxcount;
   addObject(boxName, objectsOnCanvas.length-1);
 }
 
 function updateBox() {
   var newboxcolor = document.getElementById('updatebox-color').value;
-  newboxcolor = "#" + newboxcolor;
+  if(newboxcolor[0] != '#')
+    newboxcolor = "#" + newboxcolor;
   var newboxopa = document.getElementById('updatebox-opacity').value;
   if (canvas.backgroundColor) {
     var backgroundcolor = canvas.backgroundColor;
@@ -496,6 +539,7 @@ function updateBox() {
   activeObject.fill = newboxcolor;
   activeObject.opacity = newboxopa;
   canvas.setBackgroundColor(backgroundcolor, canvas.renderAll.bind(canvas));
+
 }
 
 function resizeCanvas(event) {
@@ -543,14 +587,13 @@ function socialLoad() {
   
 }
 
+// Clear all items on the canvas
 function clearCanvas() {
   canvas.clear().renderAll();
   canvas.setBackgroundImage = 0;
   canvas.setBackgroundColor('rgba(0,0,0,0)', canvas.renderAll.bind(canvas));
 
    // Remove all items from the object array
-  var len = objectsOnCanvas.length;
-  console.log(len);
   document.getElementById("objects-on-canvas").innerHTML = "";
   objectsOnCanvas.length = 0;
 }
@@ -570,6 +613,7 @@ function sizecanvas(width,height) {
   canvas.height = height;
 }
 
+// Adds the object to the selectable list
 function addObject(object, index) {
   var ul = document.getElementById("objects-on-canvas");
   var li = document.createElement("li");
@@ -579,6 +623,7 @@ function addObject(object, index) {
   ul.appendChild(li);
 }
 
+// Removes an object from the selectable list
 function removeObject(index) {
   var ul = document.getElementById("objects-on-canvas");
   var children = ul.children;
@@ -586,13 +631,29 @@ function removeObject(index) {
   adjustIds(index);
 }
 
-function selectObject(object)
-{
-  canvas.setActiveObject(objectsOnCanvas[object]);
+// Allows for clicking on the list items
+function selectObject(index) {
+  /*var curObj = objectsOnCanvas[index];
+  if(curObj.isLocked == true) {
+    var lockedObjects = [];
+    var curLockedObjs = lockedObjs[curObj.lockIndex];
+    for(i = 0; i < curLockedObjs.length; i++) {
+      lockedObjects.push(curLockedObjs[i]);
+    }
+    var group = new fabric.Group(lockedObjects, {
+      left: 150,
+      top: 100
+    });
+    canvas.setActiveGroup(group).renderAll();
+  }
+  else {
+    canvas.setActiveObject(objectsOnCanvas[index].obj);
+  }*/
+  canvas.setActiveObject(objectsOnCanvas[index].obj);
 }
 
-function adjustIds(index)
-{
+// Helper function to adjust ids of the objects when another one is removed
+function adjustIds(index) {
   var ul = document.getElementById("objects-on-canvas");
   var children = ul.children;
   for(i = index ; i < objectsOnCanvas.length; i++) {
@@ -601,5 +662,49 @@ function adjustIds(index)
     children[i].setAttribute("id", newIndex);
   }
 }
+
+// Used to lock items to each other
+function lockObjects() {
+  var group = canvas.getActiveGroup();
+  if(!group)
+      return;
+
+  var lockedIndex = lockedObjs.length;
+  var newLockedObject = new LockedObject(group, lockedIndex);
+  lockedObjs.push(newLockedObject);
+
+
+  for(i = 0; i < group.size(); i++) {
+    var index = getIndex(group.item(i));
+    if(index != -1) {
+        objectsOnCanvas[index].isLocked = true;
+        objectsOnCanvas[index].lockIndex = lockedIndex;
+      }
+  }
+}
+
+function unlockObject(object) {
+  if(object.getIsLocked() == false)
+    return;
+
+
+
+}
+
+// Returns the index of where the obj is in the array
+// Returns -1 if it is not in the array
+function getIndex(object) {
+  if(!object)
+    return -1;
+
+  for(i = 0; i < objectsOnCanvas.length; i++) {
+    if(objectsOnCanvas[i].obj == object)
+      return i;
+  }
+
+  return -1;
+}
+
+
 
 
