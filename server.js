@@ -8,6 +8,7 @@ var admin = require('./routes/admin');
 var errors = require('./routes/error');
 var bg = require('./routes/bg');
 var images = require('./routes/images');
+var profiles = require('./routes/profiles');
 var http = require('http');
 var path = require('path');
 var fs = require('fs');
@@ -49,6 +50,7 @@ app.get('/manage', function(req, res) { res.render('user/managememe.html'); });
 app.get('/templatecenter', function(req, res) { res.render('user/templatecenter.html'); });
 app.get('/learn', function(req, res) { res.render('user/learn.html'); });
 app.get('/support', function(req, res) { res.render('user/support.html'); });
+app.get('/profiles', function(req, res) {res.render('user/profiles.html')});
 
 // Misc Assets
 app.get('/bg-upload', function(req, res) { res.render('bg-upload.html'); });
@@ -68,6 +70,7 @@ app.get('/memelist', meme.memelist(db));
 app.get('/bglist', bg.bglist(db));
 app.get('/imagelist', images.imageList(db));
 app.get('/iconlist', images.iconList(db));
+app.get('/profilelist', profiles.profileList(db));
 
 // POST
 app.post('/addmeme', meme.addmeme(db));
@@ -80,6 +83,8 @@ app.post('/deletememe', meme.deletememe(db));
 app.post('/deletebg', bg.deletebg(db));
 app.post('/deleteimage', images.deleteimage(db));
 app.post('/changepw', user.changepw(db));
+app.post('/addprofile', profiles.addProfile(db));
+app.post('/deleteprofile', profiles.deleteProfile(db));
 
 app.post('/error', errors.submiterror(db));
 
