@@ -1,0 +1,33 @@
+button {
+  width: 100%;
+}
+
+form {
+  font-size: small;
+}
+
+#profiles-list {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.add-profile {
+  margin-top: 1%;
+  margin-bottom: 7.5%;
+}
+
+.add-profile button {
+  width : 20%;
+  margin: 0;
+}
+
+.add-profile input {
+  width: 15%;
+}
+
+.add-profile form {
+  width: 80%;
+  float: left;
+  margin: 0;
+}
