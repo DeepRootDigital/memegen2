@@ -52,7 +52,6 @@ function addProfile() {
   }
 
   var isActive = false;
-  console.log(profileList.length);
   if(profileList.length == 0)
     isActive = true;
     var newProfile = {
@@ -211,9 +210,13 @@ function setInactive(profile) {
 }
 
 function clearForm() {
-  document.getElementById("profile-name").value = "",
-  document.getElementById("font-color").value = "",
-  document.getElementById("font-type").value = "",
-  document.getElementById("overlay-color").value = "",
-  document.getElementById("profile-images").value = ""
+  document.getElementById("profile-name").value = "";
+  document.getElementById("font-color").value = "FFFFFFF";
+  document.getElementById("font-color").style.color = "black";
+  document.getElementById("font-color").style.backgroundColor = "white";
+  document.getElementById("font-type").value = "";
+  document.getElementById("overlay-color").value = "FFFFFFF";
+  document.getElementById("overlay-color").style.color = "black";
+  document.getElementById("overlay-color").style.backgroundColor = "white";
+  document.getElementById("profile-images").value = "";
 }
