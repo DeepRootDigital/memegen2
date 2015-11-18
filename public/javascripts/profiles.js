@@ -24,8 +24,10 @@ function loadProfiles() {
   $.getJSON( '/profilelist', function(data) {
     profileList.length = 0;
     $.each(data, function() {
-      var newProfile = new Profile(this._id, this.profileName, this.fontColor, this.fontType, this.overlayColor, this.profileImages);
-      profileList.push(newProfile);
+      if(this.username == getCookie('id')) {
+        var newProfile = new Profile(this._id, this.profileName, this.fontColor, this.fontType, this.overlayColor, this.profileImages);
+        profileList.push(newProfile);
+      }
     });
   }).done(function() {
     // TODO: Fix the sorting profiles by name
@@ -50,7 +52,36 @@ function addProfile() {
     'fontColor'  : document.getElementById("font-color").value,
     'fontType'  : document.getElementById("font-type").value,
     'overlayColor' : document.getElementById("overlay-color").value,
-    'profileImages' : document.getElementById("profile-images").value
+    'profileImages' : document.getElementById("profile-images").value,
+    'username' : getCookie('id')
+  }
+
+  var isError = false;
+  var errorString = "Profile not added. Below is a list of errors: \n\n";
+  if(newProfile.profileName == '') {
+    errorString += "Profile name can't be blank.\n";
+    isError = true;
+  }
+  if(newProfile.fontColor == '') {
+    errorString += "Font color can't be blank.\n";
+    isError = true;
+  }
+  if(newProfile.fontType == '') {
+    errorString += "Font type can't be blank.\n";
+    isError = true;
+  }
+    if(newProfile.overlayColor == '') {
+    errorString += "Overlay color can't be blank.\n";
+    isError = true;
+  }
+    if(newProfile.profileImages == '') {
+    errorString += "Profile images can't be blank.\n";
+    isError = true;
+  }
+  //Early out if there is an error
+  if(isError) {
+    window.alert(errorString);
+    return;
   }
 
   // Execute ajax request

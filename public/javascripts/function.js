@@ -615,6 +615,7 @@ function sizecanvas(width,height) {
 
 // Adds the object to the selectable list
 function addObject(object, index) {
+  return;
   var ul = document.getElementById("objects-on-canvas");
   var li = document.createElement("li");
   li.appendChild(document.createTextNode(object));
@@ -704,7 +705,5 @@ function getIndex(object) {
 
   return -1;
 }
-
-
 
 
