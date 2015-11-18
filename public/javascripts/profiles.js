@@ -33,11 +33,12 @@ function loadProfiles() {
   }).done(function() {
     // TODO: Fix the sorting profiles by name
     //sortProfiles(); 
-    showProfiles();
-    $(".remove").on('click', function(a){
-      removeProfile(a);
-    });
-    setActive("1231");
+    if(document.getElementById("profiles-list")) {
+      showProfiles();
+      $(".remove").on('click', function(a){
+        removeProfile(a);
+      });
+    }
   });
 }
 
@@ -117,7 +118,6 @@ function showProfiles() {
     row.setAttribute("id", profileList[i].profileId); 
     for(j = 0; j < numMembers; j++) {
       var active = "";
-      console.log(profileList[i].isActive);
       if( j == 0 && profileList[i].isActive == "true")
         active += "* ";
       var cell = row.insertCell(j);

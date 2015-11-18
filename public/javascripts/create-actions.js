@@ -123,6 +123,16 @@ $(document).ready(function(){
       $(this).parent().find('.submenu-container').addClass('lines');
     }
   });
+  //Slide open the profiles panel
+    $('.selectprofile .click-container').click(function(){
+    if ($(this).parent().find('.submenu-container').hasClass('profiles')) {
+      $(this).parent().find('.submenu-container').removeClass('profiles');
+    } else {
+      closecontainers();
+      $(this).parent().find('.submenu-container').addClass('profiles');
+    }
+  });
+
   // Slide open the download options
   $('#downloadmeme-show .click-container').click(function(){
     if ($(this).parent().find('.submenu-container').hasClass('dl')) {
@@ -161,6 +171,8 @@ function closecontainers(type) {
     case "line":
       $('.addline .click-container').find('.submenu-container').addClass('lines');
       break;
+    case "profile":
+      $('.addline .click-container').find('.submenu-container').addClass('profiles');
     default:
       break;
   }

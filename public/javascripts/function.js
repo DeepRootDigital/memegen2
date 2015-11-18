@@ -45,6 +45,7 @@ $(document).ready(function(){
 	listImages();
 	// Populate icons to their select menu
 	listIcons();
+  listProfiles();
   socialLoad();
   canvasBindings();
   activeObjects();
@@ -67,9 +68,25 @@ $(document).ready(function(){
     canvas.setActiveObject(active);
   });
 
+$(function(){
+    /*
+     * this swallows backspace keys on any non-input element.
+     * stops backspace -> back
+     */
+    var rx = /INPUT|SELECT|TEXTAREA/i;
+
+    $(document).bind("keydown keypress", function(e){
+        if( e.which == 8 ){ // 8 == backspace
+            if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly ){
+                e.preventDefault();
+            }
+        }
+    });
+});
+
   // Add delete function for active objects
   window.onkeyup = function(event) {
-    if (event.keyCode == 46 || event.keyCode == 63272 || event.keyCode == 8) {
+    if (event.keyCode == 46 || event.keyCode == 63272) {
       event.preventDefault();
       if (activeObject) {
         canvas.remove(activeObject);
@@ -165,7 +182,15 @@ function canvasBindings() {
   // Click to clear the canvas
   $('#canvas-clear').on('click', clearCanvas);
   // Lock item button
-  $('#lock-objects').on('click', lockObjects)
+  $('#lock-objects').on('click', lockObjects);
+  // Select active profile
+  $('#edit-profile').on('click', function() {
+    if($('#profile-choice')) {
+      var profile = $('#profile-choice').find('option:selected')[0].innerHTML;
+      setActive(profile);
+      closecontainers();
+    }
+  });
 };
 
 // Function to save the meme that is fired on clicking button
@@ -370,6 +395,20 @@ function listIcons() {
     });
 		$('#icon-choice').html(iconTable);
 	});
+};
+
+function listProfiles() {
+  var profileTable = '';
+  $.getJSON( '/profilelist', function( data) {
+    $.each(data, function(){
+      if (getCookie('id') == this.username ) {
+        profileTable += '<option>';
+        profileTable += this.profileName;
+        profileTable += '</option>';
+      }
+    });
+    $('#profile-choice').html(profileTable);
+  });
 };
 
 function loadIconCanvas(event) {

@@ -196,6 +196,11 @@
   width:285px;
   padding:20px;
 }
+.submenu-container.profiles {
+  height:150px;
+  width:285px;
+  padding:20px;
+}
 .submenu-container.memeload {
   height:285px;
   width:285px;
@@ -436,6 +441,15 @@
 }
 .icons #icon-choice {
   width: 100%;
+}
+.profiles #profile-choice {
+  margin-top: 10px;
+  width: 100%;
+}
+.profiles #edit-profile {
+  margin-top:10px;
+  margin-left:25%;
+  text-align: center;
 }
 .icons p {
   margin: 0 !important;
