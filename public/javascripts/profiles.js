@@ -2,13 +2,14 @@ var profileList = [];
 var numMembers = 5;
 var activeProfile;
 
-function Profile(profileId, profileName, fontColor, fontType, overlayColor, profileImages) {
+function Profile(profileId, profileName, fontColor, fontType, overlayColor, profileImages, isActive) {
   this.profileId = profileId;
   this.profileName = profileName ;
   this.fontColor = fontColor;
   this.fontType = fontType;
   this.overlayColor = overlayColor;
   this.profileImages = profileImages;
+  this.isActive = isActive;
 
   this.getMembers = function(){
     return [this.profileName, this.fontColor, this.fontType, this.overlayColor, this.profileImages, this.profileId];
@@ -25,7 +26,7 @@ function loadProfiles() {
     profileList.length = 0;
     $.each(data, function() {
       if(this.username == getCookie('id')) {
-        var newProfile = new Profile(this._id, this.profileName, this.fontColor, this.fontType, this.overlayColor, this.profileImages);
+        var newProfile = new Profile(this._id, this.profileName, this.fontColor, this.fontType, this.overlayColor, this.profileImages, this.active);
         profileList.push(newProfile);
       }
     });
@@ -36,6 +37,7 @@ function loadProfiles() {
     $(".remove").on('click', function(a){
       removeProfile(a);
     });
+    setActive("1231");
   });
 }
 
@@ -47,14 +49,21 @@ function addProfile() {
       return;
     }
   }
+
+  var isActive = false;
+  console.log(profileList.length);
+  if(profileList.length == 0)
+    isActive = true;
     var newProfile = {
     'profileName'  : document.getElementById("profile-name").value,
     'fontColor'  : document.getElementById("font-color").value,
     'fontType'  : document.getElementById("font-type").value,
     'overlayColor' : document.getElementById("overlay-color").value,
     'profileImages' : document.getElementById("profile-images").value,
-    'username' : getCookie('id')
+    'username' : getCookie('id'),
+    'active' : isActive
   }
+    
 
   var isError = false;
   var errorString = "Profile not added. Below is a list of errors: \n\n";
@@ -107,8 +116,12 @@ function showProfiles() {
     var row = table.insertRow(i+1);
     row.setAttribute("id", profileList[i].profileId); 
     for(j = 0; j < numMembers; j++) {
+      var active = "";
+      console.log(profileList[i].isActive);
+      if( j == 0 && profileList[i].isActive == "true")
+        active += "* ";
       var cell = row.insertCell(j);
-      cell.innerHTML = profileList[i].getMembers()[j];
+      cell.innerHTML = active + profileList[i].getMembers()[j];
     }
     var cell = row.insertCell(numMembers);
     cell.innerHTML = "<button type=\"button\" class=\"remove\" identifier=\""+ profileList[i].profileId +"\"> Remove</button>";
@@ -142,8 +155,59 @@ function removeProfile(curData) {
       break;
     }
   }
+
   $("#"+ profileList[indexToDelete].profileId).remove();
   profileList.splice(indexToDelete, 1);
+
+  var isActive = false;
+  for(i=0; i < profileList.length; i++){
+    if(profileList[i].isActive == "true") {
+      isActive = true;
+      break;
+    }
+  }
+
+  if(!isActive && profileList.length)
+    setActive(profileList[0].profileName);
+}
+
+function setActive(profile) {
+  var messageData = {
+    username: getCookie('id'),
+    profileName: profile,
+    isActive: true
+  }
+
+  $.ajax({
+    type: 'POST',
+    data: messageData,
+    url: '/setactiveprofile',
+    dataType: 'JSON'
+  }).done(function() {
+
+    for(i=0; i < profileList.length; i++) {
+      if(profileList[i].profileName == profile)
+        continue;
+
+      setInactive(profileList[i].profileName);
+    }
+  });
+}
+
+function setInactive(profile) {
+    var messageData = {
+    username: getCookie('id'),
+    profileName: profile,
+    isActive: false
+  }
+
+  $.ajax({
+    type: 'POST',
+    data: messageData,
+    url: '/setactiveprofile',
+    dataType: 'JSON'
+  }).done(function() {
+  });
 }
 
 function clearForm() {

@@ -85,6 +85,7 @@ app.post('/deleteimage', images.deleteimage(db));
 app.post('/changepw', user.changepw(db));
 app.post('/addprofile', profiles.addProfile(db));
 app.post('/deleteprofile', profiles.deleteProfile(db));
+app.post('/setactiveprofile', profiles.setActiveProfile(db));
 
 
 app.post('/error', errors.submiterror(db));
