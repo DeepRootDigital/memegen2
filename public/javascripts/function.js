@@ -132,16 +132,19 @@ function activeObjects(){
       if ( activeObject.get('type') == "i-text" ) {
         $('.active-container > .updatetext').css('display','block');
         $('.updatetext #updatetext-color').val(activeObject.fill);
+        document.getElementById("updatetext-color").style.backgroundColor = activeObject.fill;
         $('.updatetext #updatetext-fontsize').val(activeObject.fontSize);
       } else if ( activeObject.get('type') == "image" ) {
         $('.active-container > .updateicons').css('display','block');
       } else if ( activeObject.get('type') == "rect" ) {
         $('.active-container > .updatebox').css('display','block');
         $('.updatebox #updatebox-color').val(activeObject.fill);
+        document.getElementById("updatebox-color").style.backgroundColor = activeObject.fill;
         $('.updatebox #updatebox-opacity').val(activeObject.opacity);
       } else if ( activeObject.get('type') == "line" ) {
         $('.active-container > .updateline').css('display','block');
         $('.updateline #updateline-color').val(activeObject.stroke);
+        document.getElementById("updateline-color").style.backgroundColor = activeObject.fill;
         $('.updateline #updateline-lw').val(activeObject.strokeWidth);
       }
     }

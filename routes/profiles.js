@@ -43,8 +43,6 @@ exports.profileList = function(db) {
     var un = req.body.username;
     var pn = req.body.profileName;
     var isActive = req.body.isActive;
-    console.log(un);
-    console.log(pn);
     console.log(isActive);
     db.collection('profilelist').update({username: un, profileName: pn}, {$set: {active: isActive}}, function(err, result){
       res.send(

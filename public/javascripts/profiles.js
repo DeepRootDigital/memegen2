@@ -1,18 +1,19 @@
 var profileList = [];
-var numMembers = 5;
+var numMembers = 6;
 var activeProfile;
 
-function Profile(profileId, profileName, fontColor, fontType, overlayColor, profileImages, isActive) {
+function Profile(profileId, profileName, fontColor, fontType, overlayColor, logo, domainName, isActive) {
   this.profileId = profileId;
   this.profileName = profileName ;
   this.fontColor = fontColor;
   this.fontType = fontType;
   this.overlayColor = overlayColor;
-  this.profileImages = profileImages;
+  this.logo = logo;
+  this.domainName = domainName;
   this.isActive = isActive;
 
   this.getMembers = function(){
-    return [this.profileName, this.fontColor, this.fontType, this.overlayColor, this.profileImages, this.profileId];
+    return [this.profileName, this.overlayColor, this.fontType, this.fontColor, this.logo, this.domainName, this.profileId];
   };
 }
 
@@ -26,13 +27,12 @@ function loadProfiles() {
     profileList.length = 0;
     $.each(data, function() {
       if(this.username == getCookie('id')) {
-        var newProfile = new Profile(this._id, this.profileName, this.fontColor, this.fontType, this.overlayColor, this.profileImages, this.active);
+        var newProfile = new Profile(this._id, this.profileName, this.overlayColor, this.fontType, this.fontColor, this.logo, this.domainName, this.active);
         profileList.push(newProfile);
       }
     });
   }).done(function() {
     // TODO: Fix the sorting profiles by name
-    //sortProfiles(); 
     if(document.getElementById("profiles-list")) {
       showProfiles();
       $(".remove").on('click', function(a){
@@ -56,10 +56,11 @@ function addProfile() {
     isActive = true;
     var newProfile = {
     'profileName'  : document.getElementById("profile-name").value,
-    'fontColor'  : document.getElementById("font-color").value,
+    'overlayColor'  : document.getElementById("overlay-color").value,
     'fontType'  : document.getElementById("font-type").value,
-    'overlayColor' : document.getElementById("overlay-color").value,
-    'profileImages' : document.getElementById("profile-images").value,
+    'fontColor' : document.getElementById("font-color").value,
+    'logo' : document.getElementById("logo").value,
+    'domainName' : document.getElementById("domain-name").value,
     'username' : getCookie('id'),
     'active' : isActive
   }
@@ -71,20 +72,28 @@ function addProfile() {
     errorString += "Profile name can't be blank.\n";
     isError = true;
   }
-  if(newProfile.fontColor == '') {
-    errorString += "Font color can't be blank.\n";
+   if(newProfile.overlayColor == '') {
+    errorString += "Overlay color can't be blank.\n";
     isError = true;
   }
   if(newProfile.fontType == '') {
     errorString += "Font type can't be blank.\n";
     isError = true;
   }
-    if(newProfile.overlayColor == '') {
-    errorString += "Overlay color can't be blank.\n";
+  if(newProfile.fontColor == '') {
+    errorString += "Font color can't be blank.\n";
     isError = true;
   }
-    if(newProfile.profileImages == '') {
+  if(newProfile.profileImages == '') {
     errorString += "Profile images can't be blank.\n";
+    isError = true;
+  }
+  if(newProfile.logo == '') {
+    errorString += "Logo can't be blank.\n";
+    isError = true;
+  }
+    if(newProfile.domainName == '') {
+    errorString += "Domain name can't be blank.\n";
     isError = true;
   }
   //Early out if there is an error
@@ -119,8 +128,17 @@ function showProfiles() {
       var active = "";
       if( j == 0 && profileList[i].isActive == "true")
         active += "* ";
+
       var cell = row.insertCell(j);
       cell.innerHTML = active + profileList[i].getMembers()[j];
+
+      //Set the text color equal to the text color provided in the profiles
+      if(j == 1)
+        cell.style.backgroundColor = "#"+profileList[i].getMembers()[j];
+
+      //Set the overlay color equal to the overlay color provided in the profiles
+      if(j == 3)
+        cell.style.backgroundColor = "#"+profileList[i].getMembers()[j];
     }
     var cell = row.insertCell(numMembers);
     cell.innerHTML = "<button type=\"button\" class=\"remove\" identifier=\""+ profileList[i].profileId +"\"> Remove</button>";
@@ -211,12 +229,13 @@ function setInactive(profile) {
 
 function clearForm() {
   document.getElementById("profile-name").value = "";
-  document.getElementById("font-color").value = "FFFFFFF";
+  document.getElementById("font-color").value = "FFFFFF";
   document.getElementById("font-color").style.color = "black";
   document.getElementById("font-color").style.backgroundColor = "white";
   document.getElementById("font-type").value = "";
-  document.getElementById("overlay-color").value = "FFFFFFF";
+  document.getElementById("overlay-color").value = "FFFFFF";
   document.getElementById("overlay-color").style.color = "black";
   document.getElementById("overlay-color").style.backgroundColor = "white";
-  document.getElementById("profile-images").value = "";
+  document.getElementById("logo").value = "";
+  document.getElementById("domain-name").value = "";
 }
