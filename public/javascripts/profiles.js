@@ -39,6 +39,9 @@ function loadProfiles() {
         removeProfile(a);
       });
     }
+    else {
+      populateEditor();
+    }
   });
 }
 

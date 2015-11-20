@@ -48,15 +48,14 @@
     <div class="content-container">
       <div class="settings-box">
         <div class="active-container">
+          <!--
           <div class="updatecanvas">
-          </div>
-          <!--<div class="updatecanvas">
             <input type="text" id="canvas-width" placeholder="Width" class="form-control">
             <input type="text" id="canvas-height" placeholder="Height" class="form-control">
             <button id="canvas-resize">Resize</button>
             <button id="canvas-clear">Clear</button>
             <button id="lock-objects">Lock</button>
-          </div> -->
+          </div>
           <div class="updatetext">
             <input id="updatetext-color" class="color form-control" type="text" value="ffffff">
             <input id="updatetext-fontsize" class="form-control" type="text" value="40">
@@ -81,7 +80,7 @@
           <div class="updateicons">
             <button class="bringforward">Bring Forward</button>
             <button class="sendbackward">Send Backward</button>
-          </div>
+          </div> -->
         </div>
         <ul>
           <li id="save-meme">
@@ -117,8 +116,91 @@
         </ul>
       </div>
       <div class="options-container">
+        <div class="text-fields">
+          Active profile: <br />
+          <select id="profile-choice">
+          </select>  
+        </div>
+        <div class="text-fields">
+          Overlay Position: <br />
+          <select id="overlay-selection">
+            <option>Left</option>
+            <option>Right</option>
+            <option>Top</option>
+            <option>Bottom</option>
+            <option>Full</option>
+          </select>
+          </div>
+        <div class="text-fields">
+          Overlay Percent: <br />
+          <div class="input-submit"> 
+            <input id="overlay-input" placeholder="0-100">
+            <button id="overlay-btn">Submit</button>
+          </div>
+        </div>
+        <div class="text-fields">
+          Overlay(Color - Opacity): 
+          <div class="input-submit">
+            <input class="color" id="rgb-value"></input>
+            <input id="opacity-value" placeholder="0-1"></input>
+            <button id="color-select-btn">Submit</button>
+          </div>
+        </div>
+        <div class="text-fields">
+          Main Text: 
+          <div class="input-submit">
+            <textarea id="body-text" placeholder="Type text here"></textarea>
+            <button id="body-text-btn" class="bodyText">Submit</button>
+          </div>
+        </div>
+          <div class="text-fields">
+          Additional Text: 
+          <div class="input-submit">
+            <textarea id="footer-text" placeholder="Type more text here"></textarea>
+            <button id="footer-text-btn" class="footerText">Submit</button>
+          </div>
+        </div>
+        <div class="text-fields">
+          Additional Text 2: 
+          <div class="input-submit">
+            <textarea id="author-text" placeholder="Type even more text here"></textarea>
+            <button id="author-text-btn" class="authorText">Submit</button>
+          </div>
+        </div>
+        <div class="text-fields">
+          Domain: 
+          <div class="input-submit">
+            <input id="domain-text" placeholder="example.com"></input>
+            <button id="domain-text-btn" class="domainText">Submit</button>
+          </div>
+        </div>
+        <div class="text-fields">
+          Logo: 
+          <div class="input-submit">
+            <input id="domain-text" placeholder="example.com"></input>
+            <button id="domain-text-btn" class="domainText">Submit</button>
+          </div>
+        </div>
+        <div class="text-fields">
+          Background Image: 
+          <div class="input-submit">
+            <input id="bg-opacity" placeholder="0-1"></input>
+            <input id="bg-grayscale" type="checkbox"></input>
+            <button id="bg-btn">Submit</button>
+          </div>
+        </div>
+        <div class="text-fields">
+          Logo: 
+          <div class="input-submit">
+            <input id="logo-opacity" placeholder="0-1"></input>
+            <input id="logo-grayscale" type="checkbox"></input>
+            <button id="logo-btn">Submit</button>
+          </div>
+        </div>          
+      </div>
+      <!--<div class="options-container">
         <ul>
-          <li class="selectprofile">
+         <li class="selectprofile">
             <div class="click-container">
               <p>Profiles</p>
             </div>
@@ -131,25 +213,6 @@
             <button class="buttons" id="edit-profile">Select Profile</button>
             </div>
           </li>
-          <!-- <li id="bg-solid">
-            <div class="click-container">
-              <img src="images/paintbrushtool.png">
-              <p>Background</p>
-            </div>
-            <div class="submenu-container">
-            <div class="test background">
-              <input value="ffffff" class="color" type="text" id="background-color">
-              <button class="buttons" id="bg-solid-update">Choose Color</button>
-              <div id="bg-dropzone">
-                Click or Drag Image here to upload
-              </div>
-              <select id="background-choice" class="form-control">
-              </select>
-              <button id="background-choice-submit">Choose bg</button>
-              <button id="clear-bg">Clear BG</button>
-            </div>
-            </div>
-          </li> -->
           <li class="addtextarea">
             <div class="click-container">
               <img src="images/pagewithtext.png">
@@ -210,7 +273,7 @@
             </div>
             </div>
           </li>
-        </div>
+        </div> -->
         <div class="mememaker-left">
           <div id="dropzone">
             <canvas id="c" width="630" height="651"></canvas>
@@ -223,15 +286,6 @@
           <p>File Uploaded.</p>
         </div>
       </div>
-      <!--<div id="error-box">
-    <div class="error-tab">
-      <p>Feedback</p>
-    </div>
-    <form>
-      <textarea type="text" name="error-message" class="error-message form-control" placeholder="Message"></textarea>
-      <input type="submit" id="error-submit">
-    </form>
-  </div> -->
       <script src="javascripts/fabric.min.js"></script>
       <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3.js"></script>
       <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>

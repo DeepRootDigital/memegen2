@@ -188,7 +188,49 @@ function canvasBindings() {
   $('#lock-objects').on('click', lockObjects);
   // Select active profile
   $('#edit-profile').on('click', selectProfile);
-};
+  // Overlay Size
+  $('#overlay-btn').on('click', setOverlaySize);
+  // Body text
+  $('#body-text-btn').on('click', function(a) {
+    var text = $('#body-text').val();
+    changeText(a.currentTarget.className, text);
+  });
+  $('#footer-text-btn').on('click', function(a) {
+    var text = $('#footer-text').val();
+    changeText(a.currentTarget.className, text);
+  });
+  $('#author-text-btn').on('click', function(a) {
+    var text = $('#author-text').val();
+    changeText(a.currentTarget.className, text);
+  });
+  $('#domain-text-btn').on('click', function(a) {
+    var text = $('#domain-text').val();
+    changeText(a.currentTarget.className, text);
+  });
+  $('#overlay-selection').on('change', switchTemplate);
+  $('#color-select-btn').on('click', changeOverlayColor);
+  $('#profile-choice').on('change', switchProfile);
+  $('#bg-grayscale').on('click', function() {
+      var isChecked = document.getElementById("bg-grayscale").checked;
+      var img = findObjectByName("bg");
+      applyGrayscale(isChecked, img);
+  });
+  $('#logo-grayscale').on('click', function() {
+      var isChecked = document.getElementById("logo-grayscale").checked;
+      var img = findObjectByName("logo");
+      applyGrayscale(isChecked, img);
+  });
+  $('#bg-btn').on('click', function() {
+    var object = findObjectByName("bg");
+    var opacity = document.getElementById("bg-opacity").value;
+    document.getElementById("bg-opacity").value = setOpacity(object, opacity);
+  });
+  $('#logo-btn').on('click', function() {
+    var object = findObjectByName("logo");
+    var opacity = document.getElementById("logo-opacity").value;
+    document.getElementById("logo-opacity").value = setOpacity(object, opacity);
+  });
+}
 
 // Function to save the meme that is fired on clicking button
 function saveMeme(event){
@@ -641,6 +683,7 @@ function clearCanvas() {
    // Remove all items from the object array
   document.getElementById("objects-on-canvas").innerHTML = "";
   objectsOnCanvas.length = 0;
+  objects.length = 0;
 }
 
 function sizecanvas(width,height) {
@@ -758,7 +801,136 @@ function selectProfile() {
       closecontainers();
       clearCanvas();
       objects.length = 0;
-      left(.85);
-
+      templateLeft(.80);
     }
+}
+
+function setOverlaySize() {
+  var overlaySize = document.getElementById("overlay-input");
+  
+  var validFloat = parseFloat(overlaySize.value);
+  
+  if(isNaN(validFloat))
+    overlaySize.value = 0;
+
+  if(overlaySize.value < 0)
+    overlaySize.value = 0;
+  else if (overlaySize.value > 100)
+    overlaySize.value = 100;
+    
+  clearCanvas();
+  objects.length = 0;
+  templateLeft(overlaySize.value * 0.01);
+}
+
+function populateEditor() {
+  var index = -1;
+  for(i=0; i < profileList.length; i++) {
+    if(profileList[i].isActive == "true") {
+      index = i;
+      break;
+    }
+  }
+
+  overlaySize = .75;
+
+  if(index == -1) {
+
+  }
+  else { 
+    domainName = profileList[index].domainName;
+
+  }
+
+  // Set initial values
+  document.getElementById("body-text").value = bodyText;
+  document.getElementById("footer-text").value = footerText;
+  document.getElementById("author-text").value = authorText;
+  document.getElementById("domain-text").value = domainName;
+  document.getElementById("overlay-input").value = overlaySize * 100;
+
+
+  templateLeft(overlaySize);
+}
+
+function switchTemplate() {
+  var selection = $('#overlay-selection').find('option:selected')[0].innerHTML;
+  switch (selection) {
+    case "Left":
+      templateLeft(overlaySize);
+    break;
+
+    case "Right":
+      templateRight(overlaySize);
+    break;
+
+    case "Top":
+      templateTop(overlaySize);
+    break;
+
+    case "Bottom":
+      templateBottom(overlaySize);
+    break;
+
+    case "Full":
+      templateFull();
+    break;
+
+    default:
+      templateLeft(overlaySize);
+  }
+}
+
+function changeOverlayColor() {
+  var colorHex = document.getElementById("rgb-value").value;
+  var opacity = document.getElementById("opacity-value").value;
+
+  overlayColor = hexToRgb(colorHex, opacity);
+  var overlay = findObjectByName("overlayBox");
+  overlay.fill = overlayColor;
+  canvas.renderAll();
+}
+
+
+function hexToRgb(hex, opacity) {
+    var bigint = parseInt(hex, 16);
+    var r = (bigint >> 16) & 255;
+    var g = (bigint >> 8) & 255;
+    var b = bigint & 255;
+    var a = parseFloat(opacity);
+    if(isNaN(a) || a > 1)
+      a = 1;
+    else if(a < 0)
+      a = 0;
+
+    document.getElementById("opacity-value").value = a;
+    return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+}
+
+function switchProfile() {
+  var activeProfile = document.getElementById("profile-choice").value;
+  setActive(activeProfile);
+}
+
+function applyGrayscale(isChecked, img) {
+  if(isChecked)
+    img.filters.push(new fabric.Image.filters.Grayscale());
+  else 
+    img.filters.pop(new fabric.Image.filters.Grayscale());
+
+    img.applyFilters(canvas.renderAll.bind(canvas));
+
+}
+
+function setOpacity(object, opacity) {
+  var newOpacity = parseFloat(opacity);
+  
+  if(isNaN(newOpacity) || newOpacity > 1)
+    newOpacity = 1;
+  else if(newOpacity < 0)
+    newOpacity = 0;
+
+  object.setOpacity(newOpacity);
+  canvas.renderAll();
+  return newOpacity;
 }

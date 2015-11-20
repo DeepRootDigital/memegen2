@@ -468,3 +468,56 @@
   font-size: 16px;
   color: #4c4c4c;
 }
+
+.input-submit {
+  display: inline-block;
+  width: 100%;
+}
+
+.input-submit input {
+  width: 100px;
+  color: black;
+}
+
+.input-submit button {
+  float: none;
+  height: 30px;
+  width: 75px;
+}
+
+.input-submit textarea {
+  color: black;
+}
+
+.text-fields {
+  color: white;
+}
+
+#overlay-selection {
+  color: black;
+}
+#body-text-btn {
+  margin-top: -25px;
+}
+#footer-text-btn {
+  margin-top: -25px;
+}
+#author-text-btn {
+  margin-top: -25px;
+}
+
+#domain-text {
+  width: 65%;
+}
+
+#profile-choice {
+  color: black;
+}
+
+#bg-grayscale {
+  width: 25px;
+}
+
+#logo-grayscale {
+  width: 25px;
+}
