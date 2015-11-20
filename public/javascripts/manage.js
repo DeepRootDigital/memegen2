@@ -1,10 +1,14 @@
+var activeProfile = "";
+var profileList = [];
+
 $(document).ready(function(){
 
   $('#viewmemes').on('click',populateMemeTable);
   $('#viewimages').on('click',populateImageTable);
-  $('#viewbgs').on('click',populateBgTable);
+  $('#profile-choice').on('change', populateTable);
+  //$('#viewbgs').on('click',populateBgTable);
 
-  populateMemeTable();
+  loadProfiles();
 
 });
 
@@ -13,8 +17,10 @@ function populateMemeTable() {
   $.getJSON( '/memelist', function( data ) {
     memeListData = data;
     // For each of the memes generate the HTML
+    activeProfile = $('#profile-choice').find('option:selected')[0].innerHTML;
+
     $.each(data, function(){
-      if (this.username == getCookie('id')) {
+      if (this.username == getCookie('id') && this.profileName == activeProfile) {
         tableContent += '<li><div class="';
         tableContent += this._id;
         tableContent += '"><p>';
@@ -192,7 +198,7 @@ function deleteIconSingle(event) {
   });
 };
 
-function populateBgTable() {
+/*function populateBgTable() {
   event.preventDefault();
   var tableContent = '';
   $.getJSON( '/imagelist', function( data) {
@@ -210,7 +216,7 @@ function populateBgTable() {
     $('.delete-icon').on("click",deleteImageSingle);
     $('.management-left ul li div').on('click',showSingleImage);
   });
-};
+}; */
 
 function deleteImageSingle(event) {
   event.preventDefault();
@@ -235,3 +241,35 @@ function deleteImageSingle(event) {
     }
   });
 };
+
+function loadProfiles() {
+  $.getJSON( '/profilelist', function(data) {
+    profileList.length = 0;
+    $.each(data, function() {
+      if(this.username == getCookie('id')) {
+        profileList.push(this.profileName);
+      }
+    });
+  }).done(function() {
+    populateProfileList();
+    populateMemeTable();
+  });
+}
+
+function populateProfileList() {
+  var profileTable = '';
+  for(i=0; i < profileList.length; i++) {
+        profileTable += '<option>';
+        profileTable += profileList[i];
+        profileTable += '</option>';
+  }
+  $('#profile-choice').html(profileTable);
+}
+
+function populateTable() {
+  if($('.management-left > p')[0].textContent == "My Images")
+    populateImageTable();
+  else
+    populateMemeTable();
+
+}

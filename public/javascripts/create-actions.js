@@ -1,3 +1,4 @@
+var profileName = "";
 $(document).ready(function(){
 
   /* Rendering slider and dropzone */
@@ -42,8 +43,8 @@ $(document).ready(function(){
   $('#icon-dropzone').dropzone({ 
     url: '/uploadicon',
     init: function() {
-      this.on("success", function(file) { 
-        listIcons();
+      this.on("success", function(file) {
+        listIcons();  
         $('.upload-response').animate({'height':'60px'},function(){
           setTimeout(function(){
             $('.upload-response').animate({'height':'0px'},300);
@@ -51,7 +52,8 @@ $(document).ready(function(){
         });
       });
     },
-    headers: { "un" : getCookie('id') },
+    headers: { "un" : getCookie('id'),
+                "profileName" : getProfile() },
     previewsContainer: "#previewCon"
   });
 
@@ -177,3 +179,11 @@ function closecontainers(type) {
       break;
   }
 };
+
+function getProfile() {
+  if($('#profile-choice').find('option:selected').length) {
+    var profileName = $('#profile-choice').find('option:selected')[0].innerHTML;
+    return profileName;
+  }
+  return "DEFAULTED"
+}

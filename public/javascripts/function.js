@@ -187,13 +187,7 @@ function canvasBindings() {
   // Lock item button
   $('#lock-objects').on('click', lockObjects);
   // Select active profile
-  $('#edit-profile').on('click', function() {
-    if($('#profile-choice')) {
-      var profile = $('#profile-choice').find('option:selected')[0].innerHTML;
-      setActive(profile);
-      closecontainers();
-    }
-  });
+  $('#edit-profile').on('click', selectProfile);
 };
 
 // Function to save the meme that is fired on clicking button
@@ -226,11 +220,18 @@ function saveMeme(event){
         var jsonstring = JSON.stringify(canvas);
         // Get the user that is saving
         var usern = getCookie('id');
+
+        var profileName = $('#profile-choice').find('option:selected')[0].innerHTML;
+        if(!profileName) {
+          window.alert("You must select a profile before you can save.")
+          return;
+        }
         // Turn the data into an object to be submitted
         var newMeme = {
           'memename' : memename,
           'json' : jsonstring,
           'username' : usern,
+          'profileName' : profileName,
           'height' : canvasheight,
           'width' : canvaswidth
         }
@@ -490,6 +491,7 @@ function updateText(event) {
   activeObject.fill = newtextcolor;
   activeObject.fontSize = newtextsize;
   canvas.setBackgroundColor(backgroundcolor, canvas.renderAll.bind(canvas));
+
 }
 
 function addLine(){
@@ -635,6 +637,7 @@ function clearCanvas() {
   canvas.setBackgroundImage = 0;
   canvas.setBackgroundColor('rgba(0,0,0,0)', canvas.renderAll.bind(canvas));
 
+
    // Remove all items from the object array
   document.getElementById("objects-on-canvas").innerHTML = "";
   objectsOnCanvas.length = 0;
@@ -748,4 +751,14 @@ function getIndex(object) {
   return -1;
 }
 
+function selectProfile() {
+    if($('#profile-choice')) {
+      var profile = $('#profile-choice').find('option:selected')[0].innerHTML;
+      setActive(profile);
+      closecontainers();
+      clearCanvas();
+      objects.length = 0;
+      left(.85);
 
+    }
+}

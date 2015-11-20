@@ -93,3 +93,8 @@ margin-top: 6px;
 	margin-left:auto;
 	margin-right:auto;
 }
+
+.profile-select select{
+	display: inline-block;
+   float: none;
+}

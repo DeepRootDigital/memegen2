@@ -6,7 +6,8 @@ var user = require('./routes/user');
 var meme = require('./routes/meme');
 var admin = require('./routes/admin');
 var errors = require('./routes/error');
-var bg = require('./routes/bg');
+// REMOVED: Background Code
+//var bg = require('./routes/bg');
 var images = require('./routes/images');
 var profiles = require('./routes/profiles');
 var http = require('http');
@@ -53,7 +54,8 @@ app.get('/support', function(req, res) { res.render('user/support.html'); });
 app.get('/profiles', function(req, res) {res.render('user/profiles.html')});
 
 // Misc Assets
-app.get('/bg-upload', function(req, res) { res.render('bg-upload.html'); });
+// REMOVED: Background Code
+//app.get('/bg-upload', function(req, res) { res.render('bg-upload.html'); });
 app.get('/icon-upload', function(req, res) { res.render('icon-upload.html'); });
 
 // Admin Pages
@@ -67,20 +69,22 @@ app.get('/admin', function(req, res) { res.render('admin.html'); });
 // GET
 app.get('/userlist', user.list(db));
 app.get('/memelist', meme.memelist(db));
-app.get('/bglist', bg.bglist(db));
+// REMOVED: Background Code
+//app.get('/bglist', bg.bglist(db));
 app.get('/imagelist', images.imageList(db));
 app.get('/iconlist', images.iconList(db));
 app.get('/profilelist', profiles.profileList(db));
 
 // POST
 app.post('/addmeme', meme.addmeme(db));
-app.post('/bglist', bg.addbg(db));
+// REMOVED: Background Code
+//app.post('/bglist', bg.addbg(db));
+//app.post('/deletebg', bg.deletebg(db));
 app.post('/uploadimg', images.uploadFile(db));
 app.post('/uploadicon', images.uploadIcon(db));
 app.post('/dropzoneupload', images.dzUpload(db));
 app.post('/register', user.register(db));
 app.post('/deletememe', meme.deletememe(db));
-app.post('/deletebg', bg.deletebg(db));
 app.post('/deleteimage', images.deleteimage(db));
 app.post('/changepw', user.changepw(db));
 app.post('/addprofile', profiles.addProfile(db));
