@@ -20,6 +20,7 @@ var footerText = "Additional text";
 var authorText = "Additional text 2";
 
 
+
 $(document).ready(function() {
   canvasWidth = canvas.getWidth();
   canvasHeight = canvas.getHeight();
