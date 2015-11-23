@@ -52,14 +52,21 @@
         <input type="text" id="profile-name">
         Overlay Color:
         <input type="text" class="color" id="overlay-color">
+        Overlay Opacity:
+        <input type="text" id="overlay-opacity">
         <br />
         Font Type:
         <input type="text" id="font-type">
         Font Color:
         <input type="text" class="color" id="font-color">
+        Font Opacity:
+        <input type="text" id="font-opacity">
         <br />
         Logo:
-        <input type="text" id="logo">
+        <select id="logo-select"></select>
+        <div id="icon-dropzone">
+          Click here or drop image to upload
+        </div>
         Domain:
         <input type="text" id="domain-name">
       </form>
@@ -76,8 +83,13 @@
       </tr>
     </table>
   </div>
+  <div class="upload-response">
+    <p>File Uploaded.</p>
+  </div>
+  <div class="dropzone-previews" id="previewCon"></div>
   <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3.js"></script>
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="javascripts/dropzone.js"></script>
   <script src="javascripts/global.js"></script>
   <script src="javascripts/profiles.js"></script>
   <script type="text/javascript" src="jscolor/jscolor.js"></script>

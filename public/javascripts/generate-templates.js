@@ -12,12 +12,17 @@ var bodyTextSize = 25;
 var footerTextSize = 18;
 var footerAuthorSize = 16;
 var domainFontSize = 20;
-var domainText = "businessonmarketst.com";
+var domainName = "businessonmarketst.com";
 var logoURL = "icons/bms_logo.png";
 var canvasBackground = "bg/colpan_gaslamp.jpg";
 var bodyText = "Main text";
 var footerText = "Additional text";
 var authorText = "Additional text 2";
+var bgImgOpacity = 1;
+var bgImgGrayscale = false;
+var logoImgOpacity = 1;
+var logoImgGrayscale = false;
+var currentTemplate = "Left";
 
 
 
@@ -32,16 +37,58 @@ function CanvasObject(objName, objType, objObject) {
   this.objObject = objObject;
 }
 
-function templateLeft(overlayWidth) {
+function generateTemplate(overlayWidth, templateType) {
   clearCanvas();
 
-  var rect = new fabric.Rect({
-    width: canvasWidth * overlayWidth,
-    height: canvasHeight,
-    fill : overlayColor,
-    top: 0,
-    left: 0
-  });
+  var rect;
+  switch(templateType) {
+    case "Left":
+      rect = new fabric.Rect({
+        width: canvasWidth * overlayWidth,
+        height: canvasHeight,
+        fill : overlayColor,
+        top: 0,
+        left: 0
+      });
+    break;
+    case "Right":
+      rect = new fabric.Rect({
+        width: canvasWidth * overlayWidth,
+        height: canvasHeight,
+        fill : overlayColor,
+        top : 0,
+        left : canvasWidth - (canvasWidth * overlayWidth)
+      });
+    break;
+    case "Top":
+      rect = new fabric.Rect({
+        width: canvasWidth,
+        height: canvasHeight * overlayWidth,
+        fill : overlayColor,
+        top : 0,
+        left : 0
+      });
+    break;
+    case "Bottom":
+      rect = new fabric.Rect({
+        width: canvasWidth,
+        height: canvasHeight * overlayWidth,
+        fill : overlayColor,
+        top : canvasHeight - (canvasHeight * overlayWidth),
+        left : 0
+      });
+    break;
+    case "Full":
+      rect = new fabric.Rect({
+        width: canvasWidth,
+        height: canvasHeight,
+        fill : overlayColor,
+        top : 0,
+        left : 0
+      });
+    break;
+
+  }
 
   var overlay = new CanvasObject("overlayBox", "OVERLAY", rect);
 
@@ -122,6 +169,10 @@ function templateLeft(overlayWidth) {
 
     img.top = domain.top - 100;
     img.left = overlay.left + (img.width * .5);
+    img.opacity = logoImgOpacity;
+    if(logoImgGrayscale)
+      img.filters.push(new fabric.Image.filters.Grayscale());
+    
     canvas.add(img);
     lockObject(img);
     objects[objectIndex("logo")].objObject = img;
@@ -132,474 +183,9 @@ function templateLeft(overlayWidth) {
   var bg = new fabric.Image.fromURL(canvasBackground, function(img) {
     img.width = canvasWidth;
     img.height = canvasHeight;
-    canvas.add(img);
-    img.sendToBack();
-    lockObject(img);
-    objects[objectIndex("bg")].objObject = img;
-  });
-
-  var bgImg = new CanvasObject("bg", "IMG", bgImg);
-
-  objects.push(bgImg);
-  objects.push(overlay);
-  objects.push(topHR);
-  objects.push(botHR);
-  objects.push(body);
-  objects.push(footer);
-  objects.push(domainText);
-  objects.push(footerAuthorText);
-  objects.push(logoImg);
-
-  addObjectsToCanvas();
-}
-
-function templateRight(overlayWidth) {
-  clearCanvas();
-  
-  var rect = new fabric.Rect({
-    width: canvasWidth * overlayWidth,
-    height: canvasHeight,
-    fill : overlayColor,
-    top : 0,
-    left : canvasWidth - (canvasWidth * overlayWidth)
-  });
-
-  var overlay = new CanvasObject("overlayBox", "OVERLAY", rect);
-
-  var lineWidth = rect.width * .8;
-  var line = new fabric.Rect({
-    width: lineWidth,
-    height: 1,
-    fill: fontColor,
-    top: rect.top + 40,
-    left: rect.left + (lineWidth * .10)
-  });
-
-  var topHR = new CanvasObject("topHR", "HR", line);
-
-  var text = new fabric.Text(bodyText, {
-    fontFamily: fontType,
-    fontSize: bodyTextSize,
-    fill: fontColor,
-    top: line.top + 5,
-    left: line.left
-  });
-
-  var body = new CanvasObject("bodyText", "TEXT", text);
-
-  var line2 = new fabric.Rect({
-    width: lineWidth,
-    height: 3,
-    fill: fontColor,
-    top: text.top + text.height + 5,
-    left: line.left
-  });
-
-  var botHR = new CanvasObject("botHR", "HR", line2);
-
-  var text2 = new fabric.Text(footerText, {
-    fontFamily: fontType,
-    fontSize: footerTextSize,
-    fill: fontColor,
-    top: line2.top + 10,
-    left: line.left
-  });
-
-  var footer = new CanvasObject("footer", "TEXT", text2);
-
-  var text3 = new fabric.Text(authorText, {
-    fontFamily: fontType,
-    fontSize: footerAuthorSize,
-    fill: fontColor,
-    top: text2.top + text2.height + 3,
-    left: line.left
-  });
-
-  var footerAuthorText = new CanvasObject("footerAuthor", "TEXT", text3);
-
-  var domain = new fabric.Text(domainName, {
-    fontFamily: fontType,
-    fontSize: domainFontSize,
-    fill: fontColor,
-    top: rect.height - 60,
-    left: line.left
-  });
-
-  var domainText = new CanvasObject("domain", "TEXT", domain);
-
-  var logo = new fabric.Image.fromURL(logoURL, function(img) {
-    var domain;
-    var overlay;
-    for(i=0; i < objects.length; i++) {
-      if(objects[i].objName == "domain")
-        domain = objects[i].objObject;
-      else if(objects[i].objName == "overlayBox")
-        overlay = objects[i].objObject;
-    }
-
-    img.top = domain.top - 100;
-    img.left = overlay.left + (img.width * .5);
-    canvas.add(img);
-    lockObject(img);
-    objects[objectIndex("logo")].objObject = img;
-  });
-
-  var logoImg = new CanvasObject("logo", "IMG", logo);
-
-  var bg = new fabric.Image.fromURL(canvasBackground, function(img) {
-    img.width = canvasWidth;
-    img.height = canvasHeight;
-    canvas.add(img);
-    img.sendToBack();
-    lockObject(img);
-    objects[objectIndex("bg")].objObject = img;
-  });
-
-  var bgImg = new CanvasObject("bg", "IMG", bgImg);
-
-  objects.push(bgImg);
-  objects.push(overlay);
-  objects.push(topHR);
-  objects.push(botHR);
-  objects.push(body);
-  objects.push(footer);
-  objects.push(domainText);
-  objects.push(footerAuthorText);
-  objects.push(logoImg);
-
-  addObjectsToCanvas();
-}
-
-function templateTop(overlayHeight) {
-  clearCanvas();
-
-  var rect = new fabric.Rect({
-    width: canvasWidth,
-    height: canvasHeight * overlayHeight,
-    fill : overlayColor,
-    top : 0,
-    left : 0
-  });
-
-  var overlay = new CanvasObject("overlayBox", "OVERLAY", rect);
-
-  var lineWidth = rect.width * .8;
-  var line = new fabric.Rect({
-    width: lineWidth,
-    height: 1,
-    fill: fontColor,
-    top: rect.top + 40,
-    left: rect.left + (lineWidth * .10)
-  });
-
-  var topHR = new CanvasObject("topHR", "HR", line);
-
-  var text = new fabric.Text(bodyText, {
-    fontFamily: fontType,
-    fontSize: bodyTextSize,
-    fill: fontColor,
-    top: line.top + 5,
-    left: line.left
-  });
-
-  var body = new CanvasObject("bodyText", "TEXT", text);
-
-  var line2 = new fabric.Rect({
-    width: lineWidth,
-    height: 3,
-    fill: fontColor,
-    top: text.top + text.height + 5,
-    left: line.left
-  });
-
-  var botHR = new CanvasObject("botHR", "HR", line2);
-
-  var text2 = new fabric.Text(footerText, {
-    fontFamily: fontType,
-    fontSize: footerTextSize,
-    fill: fontColor,
-    top: line2.top + 10,
-    left: line.left
-  });
-
-  var footer = new CanvasObject("footer", "TEXT", text2);
-
-  var text3 = new fabric.Text(authorText, {
-    fontFamily: fontType,
-    fontSize: footerAuthorSize,
-    fill: fontColor,
-    top: text2.top + text2.height + 3,
-    left: line.left
-  });
-
-  var footerAuthorText = new CanvasObject("footerAuthor", "TEXT", text3);
-
-  var domain = new fabric.Text(domainName, {
-    fontFamily: fontType,
-    fontSize: domainFontSize,
-    fill: fontColor,
-    top: rect.height - 60,
-    left: line.left
-  });
-
-  var domainText = new CanvasObject("domain", "TEXT", domain);
-
-  var logo = new fabric.Image.fromURL(logoURL, function(img) {
-    var domain;
-    var overlay;
-    for(i=0; i < objects.length; i++) {
-      if(objects[i].objName == "domain")
-        domain = objects[i].objObject;
-      else if(objects[i].objName == "overlayBox")
-        overlay = objects[i].objObject;
-    }
-
-    img.top = domain.top - 100;
-    img.left = overlay.left + (img.width * .5);
-    canvas.add(img);
-    lockObject(img);
-    objects[objectIndex("logo")].objObject = img;
-  });
-
-  var logoImg = new CanvasObject("logo", "IMG", logo);
-
-  var bg = new fabric.Image.fromURL(canvasBackground, function(img) {
-    img.width = canvasWidth;
-    img.height = canvasHeight;
-    canvas.add(img);
-    img.sendToBack();
-    lockObject(img);
-    objects[objectIndex("bg")].objObject = img;
-  });
-
-  var bgImg = new CanvasObject("bg", "IMG", bgImg);
-
-  objects.push(bgImg);
-  objects.push(overlay);
-  objects.push(topHR);
-  objects.push(botHR);
-  objects.push(body);
-  objects.push(footer);
-  objects.push(domainText);
-  objects.push(footerAuthorText);
-  objects.push(logoImg);
-
-  addObjectsToCanvas();
-}
-
-function templateBottom(overlayHeight) {
-  clearCanvas();
-
-  var rect = new fabric.Rect({
-    width: canvasWidth,
-    height: canvasHeight * overlayHeight,
-    fill : overlayColor,
-    top : canvasHeight - (canvasHeight * overlayHeight),
-    left : 0
-  });
-
-  var overlay = new CanvasObject("overlayBox", "OVERLAY", rect);
-
-  var lineWidth = rect.width * .8;
-  var line = new fabric.Rect({
-    width: lineWidth,
-    height: 1,
-    fill: fontColor,
-    top: rect.top + 40,
-    left: rect.left + (lineWidth * .10)
-  });
-
-  var topHR = new CanvasObject("topHR", "HR", line);
-
-  var text = new fabric.Text(bodyText, {
-    fontFamily: fontType,
-    fontSize: bodyTextSize,
-    fill: fontColor,
-    top: line.top + 5,
-    left: line.left
-  });
-
-  var body = new CanvasObject("bodyText", "TEXT", text);
-
-  var line2 = new fabric.Rect({
-    width: lineWidth,
-    height: 3,
-    fill: fontColor,
-    top: text.top + text.height + 5,
-    left: line.left
-  });
-
-  var botHR = new CanvasObject("botHR", "HR", line2);
-
-  var text2 = new fabric.Text(footerText, {
-    fontFamily: fontType,
-    fontSize: footerTextSize,
-    fill: fontColor,
-    top: line2.top + 10,
-    left: line.left
-  });
-
-  var footer = new CanvasObject("footer", "TEXT", text2);
-
-  var text3 = new fabric.Text(authorText, {
-    fontFamily: fontType,
-    fontSize: footerAuthorSize,
-    fill: fontColor,
-    top: text2.top + text2.height + 3,
-    left: line.left
-  });
-
-  var footerAuthorText = new CanvasObject("footerAuthor", "TEXT", text3);
-
-  var domain = new fabric.Text(domainName, {
-    fontFamily: fontType,
-    fontSize: domainFontSize,
-    fill: fontColor,
-    top: canvasHeight - 60,
-    left: line.left
-  });
-
-  var domainText = new CanvasObject("domain", "TEXT", domain);
-
-  var logo = new fabric.Image.fromURL(logoURL, function(img) {
-    var domain;
-    var overlay;
-    for(i=0; i < objects.length; i++) {
-      if(objects[i].objName == "domain")
-        domain = objects[i].objObject;
-      else if(objects[i].objName == "overlayBox")
-        overlay = objects[i].objObject;
-    }
-
-    img.top = domain.top - 100;
-    img.left = overlay.left + (img.width * .5);
-    canvas.add(img);
-    lockObject(img);
-    objects[objectIndex("logo")].objObject = img;
-  });
-
-  var logoImg = new CanvasObject("logo", "IMG", logo);
-
-  var bg = new fabric.Image.fromURL(canvasBackground, function(img) {
-    img.width = canvasWidth;
-    img.height = canvasHeight;
-    canvas.add(img);
-    img.sendToBack();
-    lockObject(img);
-    objects[objectIndex("bg")].objObject = img;
-  });
-
-  var bgImg = new CanvasObject("bg", "IMG", bgImg);
-
-  objects.push(bgImg);
-  objects.push(overlay);
-  objects.push(topHR);
-  objects.push(botHR);
-  objects.push(body);
-  objects.push(footer);
-  objects.push(domainText);
-  objects.push(footerAuthorText);
-  objects.push(logoImg);
-
-  addObjectsToCanvas();
-}
-
-function templateFull() {
-  clearCanvas();
-
-  var rect = new fabric.Rect({
-    width: canvasWidth,
-    height: canvasHeight,
-    fill : overlayColor,
-    top : 0,
-    left : 0
-  });
-
-  var overlay = new CanvasObject("overlayBox", "OVERLAY", rect);
-
-  var lineWidth = rect.width * .8;
-  var line = new fabric.Rect({
-    width: lineWidth,
-    height: 1,
-    fill: fontColor,
-    top: rect.top + 40,
-    left: rect.left + (lineWidth * .10)
-  });
-
-  var topHR = new CanvasObject("topHR", "HR", line);
-
-  var text = new fabric.Text(bodyText, {
-    fontFamily: fontType,
-    fontSize: bodyTextSize,
-    fill: fontColor,
-    top: line.top + 5,
-    left: line.left
-  });
-
-  var body = new CanvasObject("bodyText", "TEXT", text);
-
-  var line2 = new fabric.Rect({
-    width: lineWidth,
-    height: 3,
-    fill: fontColor,
-    top: text.top + text.height + 5,
-    left: line.left
-  });
-
-  var botHR = new CanvasObject("botHR", "HR", line2);
-
-  var text2 = new fabric.Text(footerText, {
-    fontFamily: fontType,
-    fontSize: footerTextSize,
-    fill: fontColor,
-    top: line2.top + 10,
-    left: line.left
-  });
-
-  var footer = new CanvasObject("footer", "TEXT", text2);
-
-  var text3 = new fabric.Text(authorText, {
-    fontFamily: fontType,
-    fontSize: footerAuthorSize,
-    fill: fontColor,
-    top: text2.top + text2.height + 3,
-    left: line.left
-  });
-
-  var footerAuthorText = new CanvasObject("footerAuthor", "TEXT", text3);
-
-  var domain = new fabric.Text(domainName, {
-    fontFamily: fontType,
-    fontSize: domainFontSize,
-    fill: fontColor,
-    top: canvasHeight - 60,
-    left: line.left
-  });
-
-  var domainText = new CanvasObject("domain", "TEXT", domain);
-
-  var logo = new fabric.Image.fromURL(logoURL, function(img) {
-    var domain;
-    var overlay;
-    for(i=0; i < objects.length; i++) {
-      if(objects[i].objName == "domain")
-        domain = objects[i].objObject;
-      else if(objects[i].objName == "overlayBox")
-        overlay = objects[i].objObject;
-    }
-
-    img.top = domain.top - 100;
-    img.left = overlay.left + (img.width * .5);
-    canvas.add(img);
-    lockObject(img);
-    objects[objectIndex("logo")].objObject = img;
-  });
-
-  var logoImg = new CanvasObject("logo", "IMG", logo);
-
-  var bg = new fabric.Image.fromURL(canvasBackground, function(img) {
-    img.width = canvasWidth;
-    img.height = canvasHeight;
+    img.opacity = bgImgOpacity;
+    if(bgImgGrayscale)
+      img.filters.push(new fabric.Image.filters.Grayscale());
     canvas.add(img);
     img.sendToBack();
     lockObject(img);
@@ -662,6 +248,7 @@ function setBg(img) {
 function changeText(textElement, textString) {
   for(i=0; i < objects.length; i++) {
     var name = objects[i].objName;
+    console.log(name);
     if( name == textElement) {
       objects[i].objObject.setText(textString);
       switch(name) {

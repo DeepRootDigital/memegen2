@@ -489,6 +489,10 @@
   color: black;
 }
 
+.input-submit select {
+  color: black;
+}
+
 .text-fields {
   color: white;
 }

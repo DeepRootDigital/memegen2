@@ -49,7 +49,7 @@ exports.iconList = function(db) {
    return function(req, res) {
      var oldPath = req.files.file.path;
      var usern = req.headers.un;
-     var profileName = req.headers.profileName;
+     var imgType = req.headers.img_type;
      fs.readFile(oldPath, function (err, data) {
        var fileName = req.files.file.originalFilename;
        var savename = usern + "_" + fileName;
@@ -57,7 +57,7 @@ exports.iconList = function(db) {
         'filename' : fileName,
         'username' : usern,
         'savename' : savename,
-        'profileName' : profileName
+        'img_type' : imgType
        }
        fs.rename(oldPath, 'public/icons/' + savename, function (err) {
         db.collection('iconlist').insert(fileObj, function(err, result){

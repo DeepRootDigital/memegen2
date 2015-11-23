@@ -19,6 +19,24 @@ function Profile(profileId, profileName, fontColor, fontType, overlayColor, logo
 
 $(document).ready(function(){
   loadProfiles();
+  listIcons();
+
+  $('#icon-dropzone').dropzone({ 
+    url: '/uploadicon',
+    init: function() {
+      this.on("success", function(file) {
+        listIcons();  
+        $('.upload-response').animate({'height':'60px'},function(){
+          setTimeout(function(){
+            $('.upload-response').animate({'height':'0px'},300);
+          },1500);
+        });
+      });
+    },
+    headers: { "un" : getCookie('id'),
+                "img_type" : "logo" },
+    previewsContainer: "#previewCon"
+  });
 });
 
 
@@ -57,12 +75,23 @@ function addProfile() {
   var isActive = false;
   if(profileList.length == 0)
     isActive = true;
+
+    var logoErr = false;
+    var logoName = "";
+    if($('#logo-select').find('option:selected').length)
+      logoName = getCookie('id') + '_' + $('#logo-select').find('option:selected')[0].value;
+    else
+      logoErr = true;
+
+    var overlayColor = hexToRgb(document.getElementById("overlay-color").value, document.getElementById("overlay-opacity").value);
+    var fontColor = hexToRgb(document.getElementById("font-color").value, document.getElementById("font-opacity").value);
+
     var newProfile = {
     'profileName'  : document.getElementById("profile-name").value,
-    'overlayColor'  : document.getElementById("overlay-color").value,
+    'overlayColor'  : overlayColor,
     'fontType'  : document.getElementById("font-type").value,
-    'fontColor' : document.getElementById("font-color").value,
-    'logo' : document.getElementById("logo").value,
+    'fontColor' : fontColor,
+    'logo' : logoName,
     'domainName' : document.getElementById("domain-name").value,
     'username' : getCookie('id'),
     'active' : isActive
@@ -91,7 +120,7 @@ function addProfile() {
     errorString += "Profile images can't be blank.\n";
     isError = true;
   }
-  if(newProfile.logo == '') {
+  if(logoErr) {
     errorString += "Logo can't be blank.\n";
     isError = true;
   }
@@ -133,15 +162,18 @@ function showProfiles() {
         active += "* ";
 
       var cell = row.insertCell(j);
-      cell.innerHTML = active + profileList[i].getMembers()[j];
+      if(j != 4)
+        cell.innerHTML = active + profileList[i].getMembers()[j];
+      else
+        cell.innerHTML = "<img src=icons/" + profileList[i].getMembers()[j] +"></img>";
 
       //Set the text color equal to the text color provided in the profiles
       if(j == 1)
-        cell.style.backgroundColor = "#"+profileList[i].getMembers()[j];
+        cell.style.backgroundColor = profileList[i].getMembers()[j];
 
       //Set the overlay color equal to the overlay color provided in the profiles
       if(j == 3)
-        cell.style.backgroundColor = "#"+profileList[i].getMembers()[j];
+        cell.style.backgroundColor = profileList[i].getMembers()[j];
     }
     var cell = row.insertCell(numMembers);
     cell.innerHTML = "<button type=\"button\" class=\"remove\" identifier=\""+ profileList[i].profileId +"\"> Remove</button>";
@@ -227,6 +259,7 @@ function setInactive(profile) {
     url: '/setactiveprofile',
     dataType: 'JSON'
   }).done(function() {
+    loadProfiles();
   });
 }
 
@@ -239,6 +272,37 @@ function clearForm() {
   document.getElementById("overlay-color").value = "FFFFFF";
   document.getElementById("overlay-color").style.color = "black";
   document.getElementById("overlay-color").style.backgroundColor = "white";
-  document.getElementById("logo").value = "";
   document.getElementById("domain-name").value = "";
+  document.getElementById("overlay-opacity").value = "";
+  document.getElementById("font-opacity").value = "";
+}
+
+function listIcons() {
+  var iconTable = '';
+  $.getJSON( '/iconlist', function( data) {
+    $.each(data, function(){
+      if (getCookie('id') == this.username && this.img_type == "logo") {
+        iconTable += '<option>';
+        iconTable += this.filename;
+        iconTable += '</option>';
+      }
+    });
+    $('#logo-select').html(iconTable);
+  });
+}
+
+function hexToRgb(hex, opacity) {
+    var bigint = parseInt(hex, 16);
+    var r = (bigint >> 16) & 255;
+    var g = (bigint >> 8) & 255;
+    var b = bigint & 255;
+    var a = parseFloat(opacity);
+    console.log(a);
+    
+    if(isNaN(a) || a > 1)
+      a = 1;
+    else if(a < 0)
+      a = 0;
+
+    return "rgba(" + r + "," + g + "," + b + "," + a + ")";
 }

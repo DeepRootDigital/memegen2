@@ -24,7 +24,7 @@ $(document).ready(function(){
     clickable: false
   });
 
-  $('#bg-dropzone').dropzone({ 
+  /*$('#bg-dropzone').dropzone({ 
     url: '/uploadimg',
     init: function() {
       this.on("success", function(file) { 
@@ -38,9 +38,9 @@ $(document).ready(function(){
     },
     headers: { "un" : getCookie('id') },
     previewsContainer: "#previewCon"
-  });
+  });*/
 
-  $('#icon-dropzone').dropzone({ 
+  /*$('#icon-dropzone').dropzone({ 
     url: '/uploadicon',
     init: function() {
       this.on("success", function(file) {
@@ -55,7 +55,7 @@ $(document).ready(function(){
     headers: { "un" : getCookie('id'),
                 "profileName" : getProfile() },
     previewsContainer: "#previewCon"
-  });
+  });*/
 
   /* Different click actions */
 

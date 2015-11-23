@@ -37,6 +37,23 @@ $(document).ready(function(){
     var dataURL = canvas.toDataURL({format: formattype});
     window.open(dataURL);
   });
+
+    $('#bg-dropzone').dropzone({ 
+    url: '/uploadicon',
+    init: function() {
+      this.on("success", function(file) {
+        listBgs();  
+        $('.upload-response').animate({'height':'60px'},function(){
+          setTimeout(function(){
+            $('.upload-response').animate({'height':'0px'},300);
+          },1500);
+        });
+      });
+    },
+    headers: { "un" : getCookie('id'),
+                "img_type" : "bg" },
+    previewsContainer: "#previewCon"
+  });
 	
 
 	// Populate saved memes the select menu to be loaded
@@ -45,6 +62,7 @@ $(document).ready(function(){
 	listImages();
 	// Populate icons to their select menu
 	listIcons();
+  listBgs();
   listProfiles();
   socialLoad();
   canvasBindings();
@@ -186,8 +204,6 @@ function canvasBindings() {
   $('#canvas-clear').on('click', clearCanvas);
   // Lock item button
   $('#lock-objects').on('click', lockObjects);
-  // Select active profile
-  $('#edit-profile').on('click', selectProfile);
   // Overlay Size
   $('#overlay-btn').on('click', setOverlaySize);
   // Body text
@@ -198,10 +214,12 @@ function canvasBindings() {
   $('#footer-text-btn').on('click', function(a) {
     var text = $('#footer-text').val();
     changeText(a.currentTarget.className, text);
+
   });
   $('#author-text-btn').on('click', function(a) {
     var text = $('#author-text').val();
     changeText(a.currentTarget.className, text);
+
   });
   $('#domain-text-btn').on('click', function(a) {
     var text = $('#domain-text').val();
@@ -214,11 +232,13 @@ function canvasBindings() {
       var isChecked = document.getElementById("bg-grayscale").checked;
       var img = findObjectByName("bg");
       applyGrayscale(isChecked, img);
+      bgImgGrayscale = isChecked;
   });
   $('#logo-grayscale').on('click', function() {
       var isChecked = document.getElementById("logo-grayscale").checked;
       var img = findObjectByName("logo");
       applyGrayscale(isChecked, img);
+      logoImgGrayscale = isChecked;
   });
   $('#bg-btn').on('click', function() {
     var object = findObjectByName("bg");
@@ -228,8 +248,11 @@ function canvasBindings() {
   $('#logo-btn').on('click', function() {
     var object = findObjectByName("logo");
     var opacity = document.getElementById("logo-opacity").value;
-    document.getElementById("logo-opacity").value = setOpacity(object, opacity);
+    var newOpacity = setOpacity(object, opacity);
+    document.getElementById("logo-opacity").value = newOpacity;
+    logoImgOpacity = newOpacity;
   });
+  $('#bg-select-btn').on('click', switchBackground)
 }
 
 // Function to save the meme that is fired on clicking button
@@ -794,33 +817,21 @@ function getIndex(object) {
   return -1;
 }
 
-function selectProfile() {
-    if($('#profile-choice')) {
-      var profile = $('#profile-choice').find('option:selected')[0].innerHTML;
-      setActive(profile);
-      closecontainers();
-      clearCanvas();
-      objects.length = 0;
-      templateLeft(.80);
-    }
-}
-
 function setOverlaySize() {
-  var overlaySize = document.getElementById("overlay-input");
-  
-  var validFloat = parseFloat(overlaySize.value);
+  var overlay = document.getElementById("overlay-input");
+
+  var validFloat = parseFloat(overlay.value);
   
   if(isNaN(validFloat))
-    overlaySize.value = 0;
+    overlay.value = 0;
 
-  if(overlaySize.value < 0)
-    overlaySize.value = 0;
-  else if (overlaySize.value > 100)
-    overlaySize.value = 100;
-    
-  clearCanvas();
-  objects.length = 0;
-  templateLeft(overlaySize.value * 0.01);
+  if(overlay.value < 0)
+    overlay.value = 0;
+  else if (overlay.value > 100)
+    overlay.value = 100;
+  
+  overlaySize = overlay.value * 0.01;
+  switchTemplate();
 }
 
 function populateEditor() {
@@ -837,8 +848,12 @@ function populateEditor() {
   if(index == -1) {
 
   }
-  else { 
+  else {
+    logoURL = "icons/" + profileList[index].logo;
     domainName = profileList[index].domainName;
+    overlayColor = profileList[index].overlayColor;
+    fontColor = profileList[index].fontColor;
+    document.getElementById("profile-choice").selectedIndex = index;
 
   }
 
@@ -850,12 +865,14 @@ function populateEditor() {
   document.getElementById("overlay-input").value = overlaySize * 100;
 
 
-  templateLeft(overlaySize);
+  switchTemplate();
 }
 
 function switchTemplate() {
   var selection = $('#overlay-selection').find('option:selected')[0].innerHTML;
-  switch (selection) {
+  currentTemplate = selection;
+  generateTemplate(overlaySize, currentTemplate)
+  /*switch (currentTemplate) {
     case "Left":
       templateLeft(overlaySize);
     break;
@@ -878,7 +895,7 @@ function switchTemplate() {
 
     default:
       templateLeft(overlaySize);
-  }
+  }*/
 }
 
 function changeOverlayColor() {
@@ -933,4 +950,28 @@ function setOpacity(object, opacity) {
   object.setOpacity(newOpacity);
   canvas.renderAll();
   return newOpacity;
+}
+
+function listBgs() {
+  var iconTable = '';
+  $.getJSON( '/iconlist', function( data) {
+    $.each(data, function(){
+      if (getCookie('id') == this.username && this.img_type == "bg") {
+        iconTable += '<option>';
+        iconTable += this.filename;
+        iconTable += '</option>';
+      }
+    });
+    $('#bg-select').html(iconTable);
+  });
+}
+
+function switchBackground() {
+  //if($('#bg-select').find('option:selected').length)
+  //  return;
+
+  console.log("hi");
+  var bgLoc = "icons/" + getCookie('id') + '_' + $('#bg-select').find('option:selected')[0].value;
+  canvasBackground = bgLoc;
+  switchTemplate();
 }
