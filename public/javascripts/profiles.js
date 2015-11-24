@@ -423,7 +423,7 @@ $('#font-select').on('change', function () {
 
 });
 
-$.get("https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyAFqR30kIh3nIhZckWexG7M-z6d1zE690M",  {}, function (data) {
+$.get("https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyCmindH6dNUXJHMn-Yy28zLM15uw-WllV0",  {}, function (data) {
 
     $.each(data.items, function (index, value) {
             $('#font-select').append($("<option></option>")
