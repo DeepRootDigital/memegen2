@@ -171,7 +171,7 @@ function generateTemplate(overlayWidth, templateType) {
         overlay = objects[i].objObject;
     }
 
-    img.top = domain.top - (img.height);
+    img.top = domain.top - (img.height + 5);
     img.left = domain.left;
     img.opacity = logoImgOpacity;
     if(logoImgGrayscale)
