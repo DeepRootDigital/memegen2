@@ -260,11 +260,14 @@ function updateProfile(profileName) {
           if(j == 1)
             cell.style.backgroundColor = "#" + profileList[i].overlayColor;
         }
+        table.rows[index+1].cells[numMembers].innerHTML = "<button type=\"button\" class=\"edit\" identifier=\""+ profileList[index].profileName +"\"> Edit</button>";
       break;
       }
     }
-    if(index != -1)
+    if(index != -1) {
       document.getElementById("add-profile-btn").name = profileList[index].profileName;
+
+    }
 }
 
 function sortProfiles() {
