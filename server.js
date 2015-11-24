@@ -33,7 +33,6 @@ app.use(express.bodyParser({keepExtensions:true,uploadDir:__dirname+'/public/ico
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 /* Define all the pages */
 
 // Pre login
@@ -104,6 +103,6 @@ app.post('/adminlog', admin.adminlog(db));
 
 
 /* End RESTful actions */
-http.createServer(app).listen(app.get('port'), app.get('ip'), function(){
+http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
