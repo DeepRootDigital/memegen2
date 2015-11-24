@@ -4,10 +4,10 @@
 var canvasWidth = 0;
 var canvasHeight = 0;
 var objects = [];
-var overlaySize = 0;
+var overlaySize = .75;
 var overlayColor = "rgba(255,0,0,0.5)";
 var fontColor = "rgba(255,255,255,.75)";
-var fontType = 'Comic Sans';
+var fontType = "";
 var bodyTextSize = 25;
 var footerTextSize = 18;
 var footerAuthorSize = 16;
@@ -147,11 +147,15 @@ function generateTemplate(overlayWidth, templateType) {
 
   var footerAuthorText = new CanvasObject("authorText", "TEXT", text3);
 
+  var topHeight = rect.height - 60;
+  if(currentTemplate == "Bottom")
+    topHeight = canvasHeight - 60;
+
   var domain = new fabric.Text(domainName, {
     fontFamily: fontType,
     fontSize: domainFontSize,
     fill: fontColor,
-    top: rect.height - 60,
+    top: topHeight,
     left: line.left
   });
 
@@ -167,8 +171,8 @@ function generateTemplate(overlayWidth, templateType) {
         overlay = objects[i].objObject;
     }
 
-    img.top = domain.top - 100;
-    img.left = overlay.left + (img.width * .5);
+    img.top = domain.top - (img.height);
+    img.left = domain.left;
     img.opacity = logoImgOpacity;
     if(logoImgGrayscale)
       img.filters.push(new fabric.Image.filters.Grayscale());
@@ -289,4 +293,22 @@ function objectIndex(name) {
   }
 
   return undefined;
+}
+
+function rgbaToHex(fontColor) {
+  var hex = rgb2hex(fontColor);
+  document.getElementById("rgb-value").value = hex;
+  document.getElementById("opacity-value").value = 1;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+function rgb2hex(rgb){
+ rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+ return (rgb && rgb.length === 4) ? 
+  ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+  ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+  ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
 }

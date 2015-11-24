@@ -9,6 +9,7 @@ form {
 
 #profiles-list {
   width: 70%;
+  margin-top: 225px  ;
   margin-left: 15%;
   margin-right: 15%;
 }
@@ -48,4 +49,14 @@ form {
 
 #domain-name {
   margin-left: 34px;
+}
+
+
+#logo-selection {
+  display: inline-block;
+  float:none;
+}
+
+#logo-selection button {
+  width: 40%;
 }

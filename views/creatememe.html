@@ -130,22 +130,8 @@
             <option>Bottom</option>
             <option>Full</option>
           </select>
-          </div>
-        <div class="text-fields">
-          Overlay Percent: <br />
-          <div class="input-submit"> 
-            <input id="overlay-input" placeholder="0-100">
-            <button id="overlay-btn">Submit</button>
-          </div>
         </div>
-        <div class="text-fields">
-          Overlay(Color - Opacity): 
-          <div class="input-submit">
-            <input class="color" id="rgb-value"></input>
-            <input id="opacity-value" placeholder="0-1"></input>
-            <button id="color-select-btn">Submit</button>
-          </div>
-        </div>
+        <hr>
         <div class="text-fields">
           Main Text: 
           <div class="input-submit">
@@ -168,10 +154,27 @@
           </div>
         </div>
         <div class="text-fields">
-          Domain: 
+          Background Image:
           <div class="input-submit">
-            <input id="domain-text" placeholder="example.com"></input>
-            <button id="domain-text-btn" class="domainText">Submit</button>
+            <select id="bg-select"></select>
+            <button id="bg-select-btn">Select</button>
+            <div id="bg-dropzone"> Upload Images</div>
+          </div>
+        </div> 
+        <hr>
+        <div class="text-fields">
+          Overlay Percent: <br />
+          <div class="input-submit"> 
+            <input id="overlay-input" placeholder="0-100">
+            <button id="overlay-btn">Submit</button>
+          </div>
+        </div>
+        <div class="text-fields">
+          Overlay(Color - Opacity): 
+          <div class="input-submit">
+            <input class="color" id="rgb-value"></input>
+            <input id="opacity-value" placeholder="0-1"></input>
+            <button id="color-select-btn">Submit</button>
           </div>
         </div>
         <div class="text-fields">
@@ -190,14 +193,7 @@
             <button id="logo-btn">Submit</button>
           </div>
         </div>
-        <div class="text-fields">
-          Background Image:
-          <div class="input-submit">
-            <select id="bg-select"></select>
-            <button id="bg-select-btn">Select</button>
-            <div id="bg-dropzone"> Upload Images</div>
-          </div>
-        </div> 
+
       </div>
       <!--<div class="options-container">
         <ul>

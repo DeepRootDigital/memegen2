@@ -157,7 +157,6 @@ function activeObjects(){
       } else if ( activeObject.get('type') == "rect" ) {
         $('.active-container > .updatebox').css('display','block');
         $('.updatebox #updatebox-color').val(activeObject.fill);
-        document.getElementById("updatebox-color").style.backgroundColor = activeObject.fill;
         $('.updatebox #updatebox-opacity').val(activeObject.opacity);
       } else if ( activeObject.get('type') == "line" ) {
         $('.active-container > .updateline').css('display','block');
@@ -227,6 +226,7 @@ function canvasBindings() {
   });
   $('#overlay-selection').on('change', switchTemplate);
   $('#color-select-btn').on('click', changeOverlayColor);
+  $('#font-select-btn').on('click', changeFontColor);
   $('#profile-choice').on('change', switchProfile);
   $('#bg-grayscale').on('click', function() {
       var isChecked = document.getElementById("bg-grayscale").checked;
@@ -843,26 +843,25 @@ function populateEditor() {
     }
   }
 
-  overlaySize = .75;
-
   if(index == -1) {
 
   }
   else {
     logoURL = "icons/" + profileList[index].logo;
     domainName = profileList[index].domainName;
-    overlayColor = profileList[index].overlayColor;
-    fontColor = profileList[index].fontColor;
+    overlayColor = hexToRgb(profileList[index].overlayColor, .5);
+    fontColor = hexToRgb(profileList[index].fontColor, 1);
+    fontType = profileList[index].fontType;
     document.getElementById("profile-choice").selectedIndex = index;
+    document.getElementById("rgb-value").value = profileList[index].overlayColor;
 
   }
 
-  // Set initial values
   document.getElementById("body-text").value = bodyText;
   document.getElementById("footer-text").value = footerText;
   document.getElementById("author-text").value = authorText;
-  document.getElementById("domain-text").value = domainName;
   document.getElementById("overlay-input").value = overlaySize * 100;
+  document.getElementById("opacity-value").value = .5;
 
 
   switchTemplate();
@@ -872,30 +871,6 @@ function switchTemplate() {
   var selection = $('#overlay-selection').find('option:selected')[0].innerHTML;
   currentTemplate = selection;
   generateTemplate(overlaySize, currentTemplate)
-  /*switch (currentTemplate) {
-    case "Left":
-      templateLeft(overlaySize);
-    break;
-
-    case "Right":
-      templateRight(overlaySize);
-    break;
-
-    case "Top":
-      templateTop(overlaySize);
-    break;
-
-    case "Bottom":
-      templateBottom(overlaySize);
-    break;
-
-    case "Full":
-      templateFull();
-    break;
-
-    default:
-      templateLeft(overlaySize);
-  }*/
 }
 
 function changeOverlayColor() {
@@ -905,6 +880,20 @@ function changeOverlayColor() {
   overlayColor = hexToRgb(colorHex, opacity);
   var overlay = findObjectByName("overlayBox");
   overlay.fill = overlayColor;
+  canvas.renderAll();
+}
+
+function changeFontColor() {
+  var colorHex = document.getElementById("font-rgb-value").value;
+  var opacity = document.getElementById("font-opacity-value").value;
+
+  fontColor = hexToRgb(colorHex, opacity);
+  // Set initial values
+  var texts = [ findObjectByName("bodyText"), findObjectByName("footerText"), findObjectByName("authorText"), 
+                findObjectByName("domainText"), findObjectByName("botHR"), findObjectByName("topHR")];
+  for(i=0;i<texts.length;i++) {
+    texts[i].fill = fontColor;
+  }
   canvas.renderAll();
 }
 
@@ -967,10 +956,9 @@ function listBgs() {
 }
 
 function switchBackground() {
-  //if($('#bg-select').find('option:selected').length)
-  //  return;
+  if($('#bg-select').find('option:selected').length == 0)
+   return;
 
-  console.log("hi");
   var bgLoc = "icons/" + getCookie('id') + '_' + $('#bg-select').find('option:selected')[0].value;
   canvasBackground = bgLoc;
   switchTemplate();

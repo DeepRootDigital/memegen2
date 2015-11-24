@@ -51,10 +51,15 @@ function loadProfiles() {
     });
   }).done(function() {
     // TODO: Fix the sorting profiles by name
+    loadFonts();
     if(document.getElementById("profiles-list")) {
       showProfiles();
-      $(".remove").on('click', function(a){
+      $('.remove').on('click', function(a){
         removeProfile(a);
+      });
+
+      $('.edit').on('click', function(a){
+        editProfile(a);
       });
     }
     else {
@@ -83,13 +88,20 @@ function addProfile() {
     else
       logoErr = true;
 
-    var overlayColor = hexToRgb(document.getElementById("overlay-color").value, document.getElementById("overlay-opacity").value);
-    var fontColor = hexToRgb(document.getElementById("font-color").value, document.getElementById("font-opacity").value);
+    var fontErr = false;
+    var fontName = "";
+    if($('#font-select').find('option:selected').length)
+      fontName = $('#font-select').find('option:selected')[0].value;
+    else
+      fontErr = true;
+
+    var overlayColor = document.getElementById("overlay-color").value;//hexToRgb(document.getElementById("overlay-color").value, document.getElementById("overlay-opacity").value);
+    var fontColor = document.getElementById("font-color").value;//hexToRgb(document.getElementById("font-color").value, document.getElementById("font-opacity").value);
 
     var newProfile = {
     'profileName'  : document.getElementById("profile-name").value,
     'overlayColor'  : overlayColor,
-    'fontType'  : document.getElementById("font-type").value,
+    'fontType'  : fontName,
     'fontColor' : fontColor,
     'logo' : logoName,
     'domainName' : document.getElementById("domain-name").value,
@@ -108,7 +120,7 @@ function addProfile() {
     errorString += "Overlay color can't be blank.\n";
     isError = true;
   }
-  if(newProfile.fontType == '') {
+  if(fontErr) {
     errorString += "Font type can't be blank.\n";
     isError = true;
   }
@@ -169,13 +181,20 @@ function showProfiles() {
 
       //Set the text color equal to the text color provided in the profiles
       if(j == 1)
-        cell.style.backgroundColor = profileList[i].getMembers()[j];
+        cell.style.backgroundColor = "#" + profileList[i].getMembers()[j];
 
+      if(j == 2) {
+        cell.style.color = profileList[i].fontColor;
+        cell.style.fontFamily = profileList[i].fontType;
+        cell.style.backgroundColor = profileList[i].overlayColor;
+      }
       //Set the overlay color equal to the overlay color provided in the profiles
       if(j == 3)
-        cell.style.backgroundColor = profileList[i].getMembers()[j];
+        cell.style.backgroundColor = "#" + profileList[i].getMembers()[j];
     }
     var cell = row.insertCell(numMembers);
+    cell.innerHTML = "<button type=\"button\" class=\"edit\" identifier=\""+ profileList[i].profileName +"\"> Edit</button>";
+    cell = row.insertCell(numMembers+1);
     cell.innerHTML = "<button type=\"button\" class=\"remove\" identifier=\""+ profileList[i].profileId +"\"> Remove</button>";
   }
 }
@@ -223,6 +242,26 @@ function removeProfile(curData) {
     setActive(profileList[0].profileName);
 }
 
+function editProfile(curData) {
+  var identifier = curData.currentTarget.attributes.identifier.nodeValue;
+  var index;
+  for(i=0; i < profileList.length; i++) {
+    if(identifier == profileList[i].profileName) {
+      index = i;
+      break;
+    }
+  }
+
+  document.getElementById("profile-name").value = profileList[index].profileName;
+  document.getElementById("font-color").value = profileList[index].fontColor;
+  document.getElementById("overlay-color").value = profileList[index].overlayColor;
+  document.getElementById("domain-name").value = profileList[index].domainName;
+  document.getElementById("font-select").value = profileList[index].fontType;
+  var logoName = profileList[index].logo.replace(getCookie('id')+"_", "");
+  document.getElementById("logo-select").value = logoName;
+
+}
+
 function setActive(profile) {
   var messageData = {
     username: getCookie('id'),
@@ -268,13 +307,10 @@ function clearForm() {
   document.getElementById("font-color").value = "FFFFFF";
   document.getElementById("font-color").style.color = "black";
   document.getElementById("font-color").style.backgroundColor = "white";
-  document.getElementById("font-type").value = "";
   document.getElementById("overlay-color").value = "FFFFFF";
   document.getElementById("overlay-color").style.color = "black";
   document.getElementById("overlay-color").style.backgroundColor = "white";
   document.getElementById("domain-name").value = "";
-  document.getElementById("overlay-opacity").value = "";
-  document.getElementById("font-opacity").value = "";
 }
 
 function listIcons() {
@@ -297,7 +333,6 @@ function hexToRgb(hex, opacity) {
     var g = (bigint >> 8) & 255;
     var b = bigint & 255;
     var a = parseFloat(opacity);
-    console.log(a);
     
     if(isNaN(a) || a > 1)
       a = 1;
@@ -305,4 +340,28 @@ function hexToRgb(hex, opacity) {
       a = 0;
 
     return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+}
+$('#font-select').on('change', function () { 
+
+    $('body').append("<link rel='stylesheet' id='colorbox-css'  href='http://fonts.googleapis.com/css?family=" + escape($(this).val()) +"' type='text/css' media='all' />");
+
+    $('#font-select').css({'font-family':'"'+$(this).val()+'"'})
+
+});
+
+$.get("https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyAFqR30kIh3nIhZckWexG7M-z6d1zE690M",  {}, function (data) {
+
+    $.each(data.items, function (index, value) {
+            $('#font-select').append($("<option></option>")
+                    .attr("value", value.family)
+                    .text(value.family));
+                    });
+
+
+});
+
+function loadFonts() {
+  for(i=0; i< profileList.length; i++) {
+    $('body').append("<link rel='stylesheet' id='colorbox-css'  href='http://fonts.googleapis.com/css?family=" + escape(profileList[i].fontType) +"' type='text/css' media='all' />");
+  }
 }
