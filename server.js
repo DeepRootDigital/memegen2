@@ -23,6 +23,7 @@ var app = express();
 app.set('views', __dirname + '/views');
 app.set('port', process.env.PORT || 8080);
 app.set('ip', process.env.IP || '127.0.0.1');
+//app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 app.use(express.favicon());
 app.use(express.logger('dev'));
@@ -104,6 +105,6 @@ app.post('/adminlog', admin.adminlog(db));
 
 
 /* End RESTful actions */
-http.createServer(app).listen(app.get('port'), app.get('ip'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+http.createServer(app).listen(process.env.PORT || 8080, app.get('ip'), function(){
+  console.log('Express server listening on port ' + (process.env.PORT || "8080");
 });
