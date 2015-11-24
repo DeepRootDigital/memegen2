@@ -2,7 +2,7 @@ var profileList = [];
 var numMembers = 6;
 var activeProfile;
 
-function Profile(profileId, profileName, fontColor, fontType, overlayColor, logo, domainName, isActive) {
+function Profile(profileId, profileName, overlayColor, fontType, fontColor, logo, domainName, isActive) {
   this.profileId = profileId;
   this.profileName = profileName ;
   this.fontColor = fontColor;
@@ -39,8 +39,10 @@ $(document).ready(function(){
   });
 });
 
+$('#add-profile-btn').on('click', addProfile);
 
-function loadProfiles() {
+
+function loadProfiles(name) {
   $.getJSON( '/profilelist', function(data) {
     profileList.length = 0;
     $.each(data, function() {
@@ -54,6 +56,7 @@ function loadProfiles() {
     loadFonts();
     if(document.getElementById("profiles-list")) {
       showProfiles();
+      updateProfile(name);
       $('.remove').on('click', function(a){
         removeProfile(a);
       });
@@ -69,93 +72,120 @@ function loadProfiles() {
 }
 
 function addProfile() {
-  var addedName = document.getElementById("profile-name").value;
-  for(i = 0; i < profileList.length; i++) {
-    if(addedName == profileList[i].profileName) {
-      window.alert("Profile name already in use!");
+  var button = document.getElementById("add-profile-btn");
+  var name = button.name;
+  if(button.innerHTML == "Edit Profile") {
+    var newProfile = {
+      'oldProfileName' : document.getElementById("add-profile-btn").name,
+      'profileName' : document.getElementById("profile-name").value,
+      'overlayColor'  : document.getElementById("overlay-color").value,
+      'fontType'  : $('#font-select').find('option:selected')[0].value,
+      'fontColor' : document.getElementById("font-color").value,
+      'logo' : getCookie('id') + '_' + $('#logo-select').find('option:selected')[0].value,
+      'domainName' : document.getElementById("domain-name").value,
+      'username' : getCookie('id'),
+    }
+   $.ajax({
+      type: 'POST',
+      data: newProfile,
+      url: '/updateprofile',
+      dataType: 'JSON'
+    }).done(function() {
+        loadProfiles(name);
+        }
+      );
+   clearForm();
+   button.innerHTML = "Add Profile";
+  }
+  else {
+    var addedName = document.getElementById("profile-name").value;
+    for(i = 0; i < profileList.length; i++) {
+      if(addedName == profileList[i].profileName) {
+        window.alert("Profile name already in use!");
+        return;
+      }
+    }
+
+    var isActive = false;
+    if(profileList.length == 0)
+      isActive = true;
+
+      var logoErr = false;
+      var logoName = "";
+      if($('#logo-select').find('option:selected').length)
+        logoName = getCookie('id') + '_' + $('#logo-select').find('option:selected')[0].value;
+      else
+        logoErr = true;
+
+      var fontErr = false;
+      var fontName = "";
+      if($('#font-select').find('option:selected').length)
+        fontName = $('#font-select').find('option:selected')[0].value;
+      else
+        fontErr = true;
+
+      var overlayColor = document.getElementById("overlay-color").value;//hexToRgb(document.getElementById("overlay-color").value, document.getElementById("overlay-opacity").value);
+      var fontColor = document.getElementById("font-color").value;//hexToRgb(document.getElementById("font-color").value, document.getElementById("font-opacity").value);
+
+      var newProfile = {
+      'profileName'  : document.getElementById("profile-name").value,
+      'overlayColor'  : overlayColor,
+      'fontType'  : fontName,
+      'fontColor' : fontColor,
+      'logo' : logoName,
+      'domainName' : document.getElementById("domain-name").value,
+      'username' : getCookie('id'),
+      'active' : isActive
+    }
+      
+
+    var isError = false;
+    var errorString = "Profile not added. Below is a list of errors: \n\n";
+    if(newProfile.profileName == '') {
+      errorString += "Profile name can't be blank.\n";
+      isError = true;
+    }
+     if(newProfile.overlayColor == '') {
+      errorString += "Overlay color can't be blank.\n";
+      isError = true;
+    }
+    if(fontErr) {
+      errorString += "Font type can't be blank.\n";
+      isError = true;
+    }
+    if(newProfile.fontColor == '') {
+      errorString += "Font color can't be blank.\n";
+      isError = true;
+    }
+    if(newProfile.profileImages == '') {
+      errorString += "Profile images can't be blank.\n";
+      isError = true;
+    }
+    if(logoErr) {
+      errorString += "Logo can't be blank.\n";
+      isError = true;
+    }
+      if(newProfile.domainName == '') {
+      errorString += "Domain name can't be blank.\n";
+      isError = true;
+    }
+    //Early out if there is an error
+    if(isError) {
+      window.alert(errorString);
       return;
     }
-  }
 
-  var isActive = false;
-  if(profileList.length == 0)
-    isActive = true;
-
-    var logoErr = false;
-    var logoName = "";
-    if($('#logo-select').find('option:selected').length)
-      logoName = getCookie('id') + '_' + $('#logo-select').find('option:selected')[0].value;
-    else
-      logoErr = true;
-
-    var fontErr = false;
-    var fontName = "";
-    if($('#font-select').find('option:selected').length)
-      fontName = $('#font-select').find('option:selected')[0].value;
-    else
-      fontErr = true;
-
-    var overlayColor = document.getElementById("overlay-color").value;//hexToRgb(document.getElementById("overlay-color").value, document.getElementById("overlay-opacity").value);
-    var fontColor = document.getElementById("font-color").value;//hexToRgb(document.getElementById("font-color").value, document.getElementById("font-opacity").value);
-
-    var newProfile = {
-    'profileName'  : document.getElementById("profile-name").value,
-    'overlayColor'  : overlayColor,
-    'fontType'  : fontName,
-    'fontColor' : fontColor,
-    'logo' : logoName,
-    'domainName' : document.getElementById("domain-name").value,
-    'username' : getCookie('id'),
-    'active' : isActive
+    // Execute ajax request
+    $.ajax({
+      type: 'POST',
+      data: newProfile,
+      url: '/addprofile',
+      dataType: 'JSON'
+    }).done(function() {
+      loadProfiles();
+      clearForm();
+    });
   }
-    
-
-  var isError = false;
-  var errorString = "Profile not added. Below is a list of errors: \n\n";
-  if(newProfile.profileName == '') {
-    errorString += "Profile name can't be blank.\n";
-    isError = true;
-  }
-   if(newProfile.overlayColor == '') {
-    errorString += "Overlay color can't be blank.\n";
-    isError = true;
-  }
-  if(fontErr) {
-    errorString += "Font type can't be blank.\n";
-    isError = true;
-  }
-  if(newProfile.fontColor == '') {
-    errorString += "Font color can't be blank.\n";
-    isError = true;
-  }
-  if(newProfile.profileImages == '') {
-    errorString += "Profile images can't be blank.\n";
-    isError = true;
-  }
-  if(logoErr) {
-    errorString += "Logo can't be blank.\n";
-    isError = true;
-  }
-    if(newProfile.domainName == '') {
-    errorString += "Domain name can't be blank.\n";
-    isError = true;
-  }
-  //Early out if there is an error
-  if(isError) {
-    window.alert(errorString);
-    return;
-  }
-
-  // Execute ajax request
-  $.ajax({
-    type: 'POST',
-    data: newProfile,
-    url: '/addprofile',
-    dataType: 'JSON'
-  }).done(function() {
-    loadProfiles();
-    clearForm();
-  });
 }
 
 function showProfiles() {
@@ -171,7 +201,7 @@ function showProfiles() {
     for(j = 0; j < numMembers; j++) {
       var active = "";
       if( j == 0 && profileList[i].isActive == "true")
-        active += "* ";
+        active += "";
 
       var cell = row.insertCell(j);
       if(j != 4)
@@ -180,8 +210,8 @@ function showProfiles() {
         cell.innerHTML = "<img src=icons/" + profileList[i].getMembers()[j] +"></img>";
 
       //Set the text color equal to the text color provided in the profiles
-      if(j == 1)
-        cell.style.backgroundColor = "#" + profileList[i].getMembers()[j];
+      if(j == 3)
+        cell.style.backgroundColor = "#" + profileList[i].fontColor;
 
       if(j == 2) {
         cell.style.color = profileList[i].fontColor;
@@ -189,14 +219,52 @@ function showProfiles() {
         cell.style.backgroundColor = profileList[i].overlayColor;
       }
       //Set the overlay color equal to the overlay color provided in the profiles
-      if(j == 3)
-        cell.style.backgroundColor = "#" + profileList[i].getMembers()[j];
+      if(j == 1)
+        cell.style.backgroundColor = "#" + profileList[i].overlayColor;
     }
     var cell = row.insertCell(numMembers);
     cell.innerHTML = "<button type=\"button\" class=\"edit\" identifier=\""+ profileList[i].profileName +"\"> Edit</button>";
     cell = row.insertCell(numMembers+1);
     cell.innerHTML = "<button type=\"button\" class=\"remove\" identifier=\""+ profileList[i].profileId +"\"> Remove</button>";
   }
+}
+
+function updateProfile(profileName) {
+  var table = document.getElementById("profiles-list");
+  var index = -1;
+  for(i=0; i < profileList.length; i++) {
+    var row = table.rows[i+1];
+     if(row.cells[0].innerHTML == profileName) {
+      index = i
+      for(j = 0; j < numMembers; j++) {
+          var active = "";
+          if( j == 0 && profileList[i].isActive == "true")
+            active += "";
+
+          var cell = row.cells[j];
+          if(j != 4)
+            cell.innerHTML = active + profileList[i].getMembers()[j];
+          else
+            cell.innerHTML = "<img src=icons/" + profileList[i].getMembers()[j] +"></img>";
+
+          //Set the text color equal to the text color provided in the profiles
+          if(j == 3)
+            cell.style.backgroundColor = "#" + profileList[i].fontColor;
+
+          if(j == 2) {
+            cell.style.color = profileList[i].fontColor;
+            cell.style.fontFamily = profileList[i].fontType;
+            cell.style.backgroundColor = profileList[i].overlayColor;
+          }
+          //Set the overlay color equal to the overlay color provided in the profiles
+          if(j == 1)
+            cell.style.backgroundColor = "#" + profileList[i].overlayColor;
+        }
+      break;
+      }
+    }
+    if(index != -1)
+      document.getElementById("add-profile-btn").name = profileList[index].profileName;
 }
 
 function sortProfiles() {
@@ -260,6 +328,9 @@ function editProfile(curData) {
   var logoName = profileList[index].logo.replace(getCookie('id')+"_", "");
   document.getElementById("logo-select").value = logoName;
 
+  var button = document.getElementById("add-profile-btn");
+  button.innerHTML = "Edit Profile";
+  button.name = profileList[index].profileName;
 }
 
 function setActive(profile) {
@@ -365,3 +436,4 @@ function loadFonts() {
     $('body').append("<link rel='stylesheet' id='colorbox-css'  href='http://fonts.googleapis.com/css?family=" + escape(profileList[i].fontType) +"' type='text/css' media='all' />");
   }
 }
+

@@ -43,8 +43,26 @@ exports.profileList = function(db) {
     var un = req.body.username;
     var pn = req.body.profileName;
     var isActive = req.body.isActive;
-    console.log(isActive);
     db.collection('profilelist').update({username: un, profileName: pn}, {$set: {active: isActive}}, function(err, result){
+      res.send(
+        (err === null) ? { msg: ''} : { msg: err }
+      );
+    });
+  }
+ }
+
+exports.updateProfile = function(db) {
+  return function(req, res) {
+    var _profileName = req.body.profileName;
+    var _overlayColor = req.body.overlayColor;
+    var _fontType = req.body.fontType;
+    var _fontColor = req.body.fontColor;
+    var _logo = req.body.logo;
+    var _domainName = req.body.domainName;
+    var _username = req.body.username;
+    var _oldProfileName = req.body.oldProfileName;
+    db.collection('profilelist').update({username : _username, profileName : _oldProfileName}, {$set: {profileName : _profileName, overlayColor : _overlayColor, fontType : _fontType,
+                                                                           fontColor : _fontColor, logo : _logo, domainName :_domainName}}, function(err, result){
       res.send(
         (err === null) ? { msg: ''} : { msg: err }
       );

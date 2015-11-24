@@ -23,8 +23,8 @@ var app = express();
 app.set('views', __dirname + '/views');
 app.set('port', process.env.PORT || 8080);
 app.set('ip', process.env.IP || '127.0.0.1');
-app.set('view engine', 'ejs');
-//app.engine('html', require('ejs').renderFile);
+//app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
 app.use(express.favicon())
 app.use(express.logger('dev'));
 app.use(express.json());
@@ -97,7 +97,7 @@ app.post('/error', errors.submiterror(db));
 
 // Update
 app.post('/updatememe', meme.updateMeme(db));
-
+app.post('/updateprofile', profiles.updateProfile(db));
 // Admin Actions
 
 app.post('/updateuserlevel', admin.changeuser(db));

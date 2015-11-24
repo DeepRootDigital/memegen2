@@ -54,7 +54,8 @@ $(document).ready(function(){
                 "img_type" : "bg" },
     previewsContainer: "#previewCon"
   });
-	
+
+
 
 	// Populate saved memes the select menu to be loaded
 	populateTable();
