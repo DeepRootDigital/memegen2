@@ -106,5 +106,5 @@ app.post('/adminlog', admin.adminlog(db));
 
 /* End RESTful actions */
 http.createServer(app).listen(process.env.PORT || 8080, app.get('ip'), function(){
-  console.log('Express server listening on port ' + (process.env.PORT || "8080");
+  console.log('Express server listening on port ' + (process.env.PORT || "8080"));
 });
