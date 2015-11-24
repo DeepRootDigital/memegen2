@@ -253,7 +253,8 @@ function canvasBindings() {
     document.getElementById("logo-opacity").value = newOpacity;
     logoImgOpacity = newOpacity;
   });
-  $('#bg-select-btn').on('click', switchBackground)
+  $('#bg-select-btn').on('click', switchBackground);
+  $('#picture-size').on('change', switchCanvasSize);
 }
 
 // Function to save the meme that is fired on clicking button
@@ -690,8 +691,8 @@ function socialLoad() {
       });
     }
   } else {
-    var height = 651;
-    var width = 630;
+    var height = 512;
+    var width = 1024;
     sizecanvas(width,height);
   }
   
@@ -723,6 +724,8 @@ function sizecanvas(width,height) {
   $('.upper-canvas').css('height',height+'px');
   canvas.width = width;
   canvas.height = height;
+  canvasWidth = width;
+  canvasHeight = height;
 }
 
 // Adds the object to the selectable list
@@ -865,7 +868,8 @@ function populateEditor() {
   document.getElementById("opacity-value").value = .5;
 
 
-  switchTemplate();
+
+  switchCanvasSize();
 }
 
 function switchTemplate() {
@@ -963,4 +967,52 @@ function switchBackground() {
   var bgLoc = "icons/" + getCookie('id') + '_' + $('#bg-select').find('option:selected')[0].value;
   canvasBackground = bgLoc;
   switchTemplate();
+}
+
+function switchCanvasSize() {
+  console.log("hi");
+  var selection = $('#picture-size').find('option:selected')[0].value;
+  switch(selection){
+    case "Facebook":
+      sizecanvas(1200,1200);
+    break;
+    case "Twitter":
+      sizecanvas(512,256);
+    break;
+    case "Instagram":
+      sizecanvas(612,612);
+    break;
+  }
+  switchTemplate();
+}
+
+function zoomIt(factor) {
+  canvas.setHeight(canvas.getHeight() * factor);
+  canvas.setWidth(canvas.getWidth() * factor);
+  if (canvas.backgroundImage) {
+      // Need to scale background images as well
+      var bi = canvas.backgroundImage;
+      bi.width = bi.width * factor; bi.height = bi.height * factor;
+  }
+  var objects = canvas.getObjects();
+  for (var i in objects) {
+      var scaleX = objects[i].scaleX;
+      var scaleY = objects[i].scaleY;
+      var left = objects[i].left;
+      var top = objects[i].top;
+
+      var tempScaleX = scaleX * factor;
+      var tempScaleY = scaleY * factor;
+      var tempLeft = left * factor;
+      var tempTop = top * factor;
+
+      objects[i].scaleX = tempScaleX;
+      objects[i].scaleY = tempScaleY;
+      objects[i].left = tempLeft;
+      objects[i].top = tempTop;
+
+      objects[i].setCoords();
+  }
+  canvas.renderAll();
+  canvas.calcOffset();
 }
