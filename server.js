@@ -21,8 +21,8 @@ var app = express();
 
 // all environments
 app.set('views', __dirname + '/views');
-app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 8080);
-app.set('ip', process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
+app.set('port', process.env.PORT || 8080);
+app.set('ip', process.env.IP || '127.0.0.1');
 app.engine('html', require('ejs').renderFile);
 app.use(express.favicon());
 app.use(express.logger('dev'));
