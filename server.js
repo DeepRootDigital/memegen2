@@ -15,7 +15,7 @@ var path = require('path');
 var fs = require('fs');
 
 var mongo = require('mongoskin');
-var db = mongo.db("mongodb://bmswombat:fvps123@ds055689.mongolab.com:55689/meme", {native_parser:true});
+var db = mongo.db("mongodb://jordan:fvps123@ds057934.mongolab.com:57934/bmswombat", {native_parser:true});
 
 var app = express();
 
@@ -23,8 +23,9 @@ var app = express();
 app.set('views', __dirname + '/views');
 app.set('port', process.env.PORT || 8080);
 app.set('ip', process.env.IP || '127.0.0.1');
+//app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
-//app.use(express.favicon());
+app.use(express.favicon())
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
@@ -32,6 +33,7 @@ app.use(express.methodOverride());
 app.use(express.bodyParser({keepExtensions:true,uploadDir:__dirname+'/public/icons/tmp'}));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 /* Define all the pages */
 
@@ -103,6 +105,6 @@ app.post('/adminlog', admin.adminlog(db));
 
 
 /* End RESTful actions */
-http.createServer(app).listen(app.get('port'), function(){
+http.createServer(app).listen(app.get('port'), app.get('ip'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
