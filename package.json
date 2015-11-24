@@ -10,8 +10,8 @@
     "memes"
   ],
   "author": {
-    "name": "Paul McMahon",
-    "email": "paul@businessonmarketst.com",
+    "name": "Jordan Butler",
+    "email": "jordan@businessonmarketst.com",
     "url": "http://www.businessonmarketst.com/"
   },
   "homepage": "http://www.businessonmarketst.com/",
@@ -21,8 +21,8 @@
   },
 
   "engines": {
-    "node": ">= 0.6.0",
-    "npm": ">= 1.0.0"
+    "node": ">= 0.10.37",
+    "npm": ">= 1.4.28"
   },
 
   "dependencies": {
