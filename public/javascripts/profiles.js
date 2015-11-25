@@ -245,7 +245,7 @@ function updateProfile(profileName) {
           if(j != 4)
             cell.innerHTML = active + profileList[i].getMembers()[j];
           else
-            cell.innerHTML = "<img src=icons/" + profileList[i].getMembers()[j] +"></img>";
+            cell.innerHTML = "<img src=/icons/" + profileList[i].getMembers()[j] +"></img>";
 
           //Set the text color equal to the text color provided in the profiles
           if(j == 3)
