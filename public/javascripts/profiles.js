@@ -260,7 +260,7 @@ function updateProfile(profileName) {
           if(j == 1)
             cell.style.backgroundColor = "#" + profileList[i].overlayColor;
         }
-        table.rows[index+1].cells[numMembers].innerHTML = "<button type=\"button\" class=\"edit\" identifier=\""+ profileList[index].profileName +"\"> Edit</button>";
+        table.rows[index].cells[numMembers].innerHTML = "<button type=\"button\" class=\"edit\" identifier=\""+ profileList[index].profileName +"\"> Edit</button>";
       break;
       }
     }
@@ -423,7 +423,7 @@ $('#font-select').on('change', function () {
 
 });
 
-$.get("https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyCmindH6dNUXJHMn-Yy28zLM15uw-WllV0",  {}, function (data) {
+$.get("https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyAFqR30kIh3nIhZckWexG7M-z6d1zE690M",  {}, function (data) {
 
     $.each(data.items, function (index, value) {
             $('#font-select').append($("<option></option>")
@@ -436,7 +436,7 @@ $.get("https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyCmindH6dNUXJHMn
 
 function loadFonts() {
   for(i=0; i< profileList.length; i++) {
-    $('body').append("<link rel='stylesheet' id='colorbox-css'  href='http://fonts.googleapis.com/css?family=" + escape(profileList[i].fontType) +"' type='text/css' media='all' />");
+    $('body').append("<link rel='stylesheet' id='colorbox-css'  href='https://fonts.googleapis.com/css?family=" + escape(profileList[i].fontType) +"' type='text/css' media='all' />");
   }
 }
 
