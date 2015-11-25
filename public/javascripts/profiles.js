@@ -417,7 +417,7 @@ function hexToRgb(hex, opacity) {
 }
 $('#font-select').on('change', function () { 
 
-    $('body').append("<link rel='stylesheet' id='colorbox-css'  href='http://fonts.googleapis.com/css?family=" + escape($(this).val()) +"' type='text/css' media='all' />");
+    $('body').append("<link rel='stylesheet' id='colorbox-css'  href='https://fonts.googleapis.com/css?family=" + escape($(this).val()) +"' type='text/css' media='all' />");
 
     $('#font-select').css({'font-family':'"'+$(this).val()+'"'})
 
