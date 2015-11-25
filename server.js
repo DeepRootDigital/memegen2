@@ -32,7 +32,7 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.bodyParser({keepExtensions:true,uploadDir:__dirname+'/public/icons/tmp'}));
 app.use(app.router);
-app.use(express.static(__dirname + '/static'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 /* Define all the pages */
