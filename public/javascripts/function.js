@@ -33,6 +33,7 @@ $(document).ready(function(){
 	// Open new tab with image to be saved
 	$('.downloadmeme').click(function(){
 		var formattype = $(this).attr('id');
+    zoomIt(1.0);
     canvas.deactivateAllWithDispatch().renderAll();
     var dataURL = canvas.toDataURL({format: formattype});
     window.open(dataURL);
@@ -974,12 +975,10 @@ function switchCanvasSize() {
   var selection = $('#picture-size').find('option:selected')[0].value;
   switch(selection){
     case "Facebook":
-      sizecanvas(1200,1200);
-      zoomIt(.5);
+      sizecanvas(1024,512);
     break;
     case "Twitter":
       sizecanvas(1024,512);
-      zoomIt(.8);
     break;
     case "Instagram":
       sizecanvas(612,612);
