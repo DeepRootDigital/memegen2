@@ -5,12 +5,15 @@ var canvasWidth = 0;
 var canvasHeight = 0;
 var objects = [];
 var overlaySize = .75;
-var overlayColor = "rgba(255,0,0,0.5)";
+var overlayColor = "rgba(255,0,0,0.85)";
 var fontColor = "rgba(255,255,255,.75)";
 var fontType = "";
+var bodyColor = "rgba(255,255,255,.75)";
+var footerColor = "rgba(255,255,255,.75)";
+var authorColor = "rgba(255,255,255,.75)";
 var bodyTextSize = 25;
 var footerTextSize = 18;
-var footerAuthorSize = 16;
+var authorTextSize = 16;
 var domainFontSize = 20;
 var domainName = "businessonmarketst.com";
 var logoURL = "icons/bms_logo.png";
@@ -100,7 +103,7 @@ function generateTemplate(overlayWidth, templateType) {
   var line = new fabric.Rect({
     width: lineWidth,
     height: 1,
-    fill: fontColor,
+    fill: bodyColor,
     top: rect.top + 40,
     left: rect.left + (lineWidth * .10)
   });
@@ -110,7 +113,7 @@ function generateTemplate(overlayWidth, templateType) {
   var text = new fabric.Text(bodyText, {
     fontFamily: fontType,
     fontSize: bodyTextSize,
-    fill: fontColor,
+    fill: bodyColor,
     top: line.top + 5,
     left: line.left
   });
@@ -120,7 +123,7 @@ function generateTemplate(overlayWidth, templateType) {
   var line2 = new fabric.Rect({
     width: lineWidth,
     height: 3,
-    fill: fontColor,
+    fill: bodyColor,
     top: text.top + text.height + 5,
     left: line.left
   });
@@ -130,7 +133,7 @@ function generateTemplate(overlayWidth, templateType) {
   var text2 = new fabric.Text(footerText, {
     fontFamily: fontType,
     fontSize: footerTextSize,
-    fill: fontColor,
+    fill: footerColor,
     top: line2.top + 10,
     left: line.left
   });
@@ -139,8 +142,8 @@ function generateTemplate(overlayWidth, templateType) {
 
   var text3 = new fabric.Text(authorText, {
     fontFamily: fontType,
-    fontSize: footerAuthorSize,
-    fill: fontColor,
+    fontSize: authorTextSize,
+    fill: authorColor,
     top: text2.top + text2.height + 3,
     left: line.left
   });
@@ -154,10 +157,14 @@ function generateTemplate(overlayWidth, templateType) {
   var domain = new fabric.Text(domainName, {
     fontFamily: fontType,
     fontSize: domainFontSize,
-    fill: fontColor,
+    fill: bodyColor,
     top: topHeight,
     left: line.left
   });
+  
+  if(domain.width > rect.width) {
+      domain.setFontSize (0.8 * domainFontSize);
+  }
 
   var domainText = new CanvasObject("domainText", "TEXT", domain);
 

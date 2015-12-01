@@ -131,7 +131,6 @@
             <option>Full</option>
           </select>
         </div>
-        <hr>
         <div class="text-fields">
           Image Size:
           <div class="text-fields">
@@ -142,6 +141,7 @@
             </select>
           </div>
         </div>
+        <hr>
         <div class="text-fields">
           Main Text: 
           <div class="input-submit">
@@ -149,7 +149,16 @@
             <button id="body-text-btn" class="bodyText">Submit</button>
           </div>
         </div>
-          <div class="text-fields">
+        <div class="text-fields">
+          Main text (Font Color - Size) : 
+          <div class="input-submit">
+            <input class="color" id="body-text-rgb"></input>
+            <input id="body-text-font-size"></input>
+            <button id="body-text-font-btn" class="bodyText">Submit</button>
+          </div>
+        </div>
+        <hr>
+        <div class="text-fields">
           Additional Text: 
           <div class="input-submit">
             <textarea id="footer-text" placeholder="Type more text here"></textarea>
@@ -157,12 +166,30 @@
           </div>
         </div>
         <div class="text-fields">
+          Additional text (Font Color - Size) : 
+          <div class="input-submit">
+            <input class="color" id="footer-text-rgb"></input>
+            <input id="footer-text-font-size"></input>
+            <button id="footer-text-font-btn" class="footerText">Submit</button>
+          </div>
+        </div>
+        <hr>
+        <div class="text-fields">
           Additional Text 2: 
           <div class="input-submit">
             <textarea id="author-text" placeholder="Type even more text here"></textarea>
             <button id="author-text-btn" class="authorText">Submit</button>
           </div>
         </div>
+        <div class="text-fields">
+          Additional text 2 (Font Color - Size) : 
+          <div class="input-submit">
+            <input class="color" id="author-text-rgb"></input>
+            <input id="author-text-font-size"></input>
+            <button id="author-text-font-btn" class="authorText">Submit</button>
+          </div>
+        </div>
+        <hr>
         <div class="text-fields">
           Background Image:
           <div class="input-submit">
@@ -205,82 +232,6 @@
         </div>
 
       </div>
-      <!--<div class="options-container">
-        <ul>
-         <li class="selectprofile">
-            <div class="click-container">
-              <p>Profiles</p>
-            </div>
-            <div class="submenu-container">
-            <div class="test">
-              <p>Active Profile:</p>
-            </div>
-            <select id="profile-choice" class="form-control">
-            </select>
-            <button class="buttons" id="edit-profile">Select Profile</button>
-            </div>
-          </li>
-          <li class="addtextarea">
-            <div class="click-container">
-              <img src="images/pagewithtext.png">
-              <p>Textbox</p>
-            </div>
-            <div class="submenu-container font">
-            <div class="test">
-              <textarea class="form-control" id="addtext-text"></textarea>
-              <input id="addtext-color" class="color form-control" type="text" value="ffffff">
-              <p>Font size: <span></span>px</p>
-              <div id="addtext-fontsize"></div>
-              <button class="middle buttons" id="addtext-add">Add Text</button>
-            </div>
-            </div>
-          </li>
-          <li class="addshape">
-            <div class="click-container">
-              <img src="images/shapelayers.png">
-              <p>Boxes</p>
-            </div>
-            <div class="submenu-container"> 
-            <div class="test">         
-              <input id="addbox-color" class="color form-control" type="text" value="ffffff">
-              <p>Opacity: <span></span></p>
-              <div id="addshape-opacity"></div>
-              <button id="addshape-box">Add Box</button>
-            </div>
-            </div>
-          </li>
-          <li class="addline">
-            <div class="click-container">
-              <img src="images/pentool.png">
-              <p>Lines</p>
-            </div>
-            <div class="submenu-container">
-            <div class="test">
-              <input id="addshape-lw" class="form-control" type="text" placeholder="Line Width">
-              <input id="addshape-color" class="color form-control" type="text" value="ffffff">
-              <button id="addshape-line">Add Line</button>
-            </div>
-            </div>
-          </li>
-          <li class="addimage">
-            <div class="click-container">
-              <img src="images/gridview.png">
-              <p>Uploaded Images</p>
-            </div>
-            <div class="submenu-container">
-            <div class="test">
-              <div id="icon-dropzone">
-                Click or Drag Image here to upload
-              </div>
-              <select id="icon-choice" class="form-control">
-              </select>
-              <button class="buttons" id="icon-choice-submit">Choose icon</button>
-              <p>GrayScale</p>
-              <input class="grayscale" type="checkbox" name="grayscale" id="icon-grayscale" value="true">
-            </div>
-            </div>
-          </li>
-        </div> -->
         <div class="mememaker-left">
           <div id="dropzone">
             <canvas id="c" width="1200" height="1200"></canvas>
