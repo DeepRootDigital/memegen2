@@ -279,6 +279,7 @@ function canvasBindings() {
   $('#footer-click').on('click', function(){
     $('#footer-text-btn').click();
     $('#footer-text-font-btn').click();
+
   });
 
   $('#author-click').on('click', function(){
@@ -289,7 +290,6 @@ function canvasBindings() {
 
 // Function to save the meme that is fired on clicking button
 function saveMeme(event){
-  closecontainers();
 	event.preventDefault();
   canvas.deactivateAllWithDispatch().renderAll();
 	// Basic validation to check name isn't empty, probably need more validation
@@ -298,6 +298,7 @@ function saveMeme(event){
 		alert('Please fill in the name.');
 		return false;
 	} else {
+    closecontainers();
     // Get the name entered
     var memename = $('#memename').val();
     // Check if the username is in use
@@ -310,6 +311,11 @@ function saveMeme(event){
           inuse = true;
         }
       });
+      var profileName = $('#profile-choice').find('option:selected')[0].innerHTML;
+      if(!profileName) {
+        window.alert("You must select a profile before you can save.")
+        return;
+      }
       if (inuse == false) {
         // Get the canvas sizes
         var canvasheight = $('.canvas-container').css('height');
@@ -319,11 +325,6 @@ function saveMeme(event){
         // Get the user that is saving
         var usern = getCookie('id');
 
-        var profileName = $('#profile-choice').find('option:selected')[0].innerHTML;
-        if(!profileName) {
-          window.alert("You must select a profile before you can save.")
-          return;
-        }
         // Turn the data into an object to be submitted
         var newMeme = {
           'memename' : memename,
@@ -375,6 +376,7 @@ function saveMeme(event){
             'memename' : memename,
             'json' : jsonstring,
             'username' : usern,
+            'profileName' : profileName,
             'height' : canvasheight,
             'width' : canvaswidth
           }
@@ -434,6 +436,7 @@ function loadCanvas(event) {
 	// Confirm that you want to load the saved canvas state
 	var confirmation = confirm('Are you sure you want to load? It will overwrite current progress.');
 	if (confirmation === true) {
+    closecontainers();
 		var thisMeme = $('#memeLoadSelector').val();
 		var arrayPosition = memeListData.map(function(arrayItem) { return arrayItem.memename; }).indexOf(thisMeme);
 		var thisMemeObject = memeListData[arrayPosition];
@@ -442,6 +445,7 @@ function loadCanvas(event) {
     canvas = new fabric.Canvas('c');
     canvas.loadFromJSON(thisMemeObject.json,function(){
       applyImageFilters();
+      loadEditor(canvas);
     });
     activeObjects();
   } else {
@@ -737,7 +741,7 @@ function clearCanvas() {
 
 
    // Remove all items from the object array
-  document.getElementById("objects-on-canvas").innerHTML = "";
+  //document.getElementById("objects-on-canvas").innerHTML = "";
   objectsOnCanvas.length = 0;
   objects.length = 0;
 }

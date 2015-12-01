@@ -184,12 +184,16 @@ function generateTemplate(overlayWidth, templateType) {
     if(logoImgGrayscale)
       img.filters.push(new fabric.Image.filters.Grayscale());
     
+    if(objects[objectIndex("logo")].objObject) 
+      return;
+    
+
     canvas.add(img);
     lockObject(img);
     objects[objectIndex("logo")].objObject = img;
   });
 
-  var logoImg = new CanvasObject("logo", "IMG", logo);
+  var logoImg = new CanvasObject("logo", "IMG", logoImg);
 
   var bg = new fabric.Image.fromURL(canvasBackground, function(img) {
     img.width = canvasWidth;
@@ -197,6 +201,10 @@ function generateTemplate(overlayWidth, templateType) {
     img.opacity = bgImgOpacity;
     if(bgImgGrayscale)
       img.filters.push(new fabric.Image.filters.Grayscale());
+
+    if(objects[objectIndex("bg")].objObject)
+      return;
+
     canvas.add(img);
     img.sendToBack();
     lockObject(img);
@@ -318,4 +326,91 @@ function rgb2hex(rgb){
   ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
   ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
   ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+}
+
+function loadEditor(canvas) {
+  var canObj = canvas.getObjects();
+
+  //Load all items into the objects array
+  var bg = new CanvasObject("bg", "IMG", canObj[0]);
+  var overlay = new CanvasObject("overlayBox", "OVERLAY", canObj[1]);
+  var topHR = new CanvasObject("topHR", "HR", canObj[2]);
+  var botHR = new CanvasObject("botHR", "HR", canObj[3]);
+  var bodyTxt = new CanvasObject("bodyText", "TEXT", canObj[4]);
+  var footerTxt = new CanvasObject("footerText", "TEXT", canObj[5]);
+  var authorTxt = new CanvasObject("authorText", "TEXT", canObj[6]);
+  var domainTxt = new CanvasObject("domainText", "TEXT", canObj[7]);
+  var logo = new CanvasObject("logo", "IMG", canObj[8]);
+
+  objects.push(bg);
+  objects.push(overlay);
+  objects.push(topHR);
+  objects.push(botHR);
+  objects.push(bodyTxt);
+  objects.push(footerTxt);
+  objects.push(authorTxt);
+  objects.push(domainTxt);
+  objects.push(logo);
+
+  for(i=0; i < objects.length; i++) {
+    lockObject(objects[i].objObject);
+  }
+
+  var index = -1;
+  for(i=0; i < profileList.length; i++) {
+    if(profileList[i].isActive == "true") {
+      index = i;
+      break;
+    }
+  }
+
+  if(index == -1) {
+
+  }
+  else {
+    logoURL = "icons/" + profileList[index].logo;
+    domainName = profileList[index].domainName;
+    overlayColor = canObj[1].getFill();
+    bodyTextSize = canObj[4].getFontSize(); 
+    footerTextSize = canObj[5].getFontSize(); 
+    authorTextSize = canObj[7].getFontSize(); 
+    domainTextSize = canObj[6].getFontSize();
+    bodyColor = canObj[4].getFill();
+    footerColor = canObj[5].getFill();
+    authorColor = canObj[7].getFill();
+    domainColor = canObj[6].getFill();
+    fontColor = bodyColor;
+    fontType = profileList[index].fontType;
+    document.getElementById("rgb-value").value = rgb2hex(overlayColor).toUpperCase();
+    document.getElementById("rgb-value").style.backgroundColor = "#" + rgb2hex(overlayColor).toUpperCase();
+    document.getElementById("profile-choice").selectedIndex = index;
+    document.getElementById("body-text-rgb").value = rgb2hex(bodyColor).toUpperCase();
+    document.getElementById("footer-text-rgb").value = rgb2hex(footerColor).toUpperCase();
+    document.getElementById("author-text-rgb").value = rgb2hex(authorColor).toUpperCase();
+    document.getElementById("body-text-rgb").style.backgroundColor = "#" + rgb2hex(bodyColor).toUpperCase();
+    document.getElementById("footer-text-rgb").style.backgroundColor = "#" + rgb2hex(footerColor).toUpperCase();
+    document.getElementById("author-text-rgb").style.backgroundColor = "#" + rgb2hex(authorColor).toUpperCase();    
+  }
+
+  document.getElementById("body-text").value = canObj[4].getText();
+  document.getElementById("footer-text").value = canObj[5].getText();
+  document.getElementById("author-text").value = canObj[7].getText();
+  document.getElementById("body-text-font-size").value = bodyTextSize;
+  document.getElementById("footer-text-font-size").value = footerTextSize;
+  document.getElementById("author-text-font-size").value = authorTextSize;
+  document.getElementById("opacity-value").value = .85;
+
+  var result = (canObj[1].getWidth() / canvas.getWidth()) * 100;
+  overlaySize = Math.round(result) * .01;
+  document.getElementById("overlay-input").value = overlaySize * 100;
+
+  if(canObj[0].filters.length) {
+    bgImgGrayscale = true;
+    document.getElementById("bg-grayscale").checked = true;
+  }
+
+  if(canObj[8].filters.length) {
+    logoImgGrayscale = true;
+    document.getElementById("logo-grayscale").checked = true;
+  }
 }

@@ -82,7 +82,7 @@ function showSingleMeme() {
       }
     });
     $('.management-right-name h2').text(memen);
-    $('.management-right-edit').html('<button>'+memen+'</button>');
+    //$('.management-right-edit').html('<button>'+memen+'</button>');
     $('.management-right-preview').html('<canvas id="c" width="' + width + 'px" height="' + height + 'px"></canvas>');
     var canvas = new fabric.Canvas('c');
     canvas.loadFromJSON(memeinfo,function(){
