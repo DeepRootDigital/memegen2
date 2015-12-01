@@ -508,12 +508,29 @@
 }
 #body-text-btn {
   margin-top: -25px;
+  display: none;
 }
+
+#body-text-font-btn {
+  display: none;
+}
+
+#author-text-font-btn {
+  display: none;
+}
+
+#footer-text-font-btn {
+  display: none;
+}
+
 #footer-text-btn {
   margin-top: -25px;
+  display: none;
 }
+
 #author-text-btn {
   margin-top: -25px;
+  display: none;
 }
 
 #domain-text {
@@ -530,4 +547,9 @@
 
 #logo-grayscale {
   width: 25px;
+}
+
+.click-btns {
+  margin-top: -5px;
+  margin-left: 15px;
 }

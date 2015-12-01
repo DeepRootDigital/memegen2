@@ -271,10 +271,25 @@ function canvasBindings() {
     var fontColor = document.getElementById("author-text-rgb").value;
     changeFont(a.currentTarget.className, fontSize,fontColor);
   });
+  $('#body-click').on('click', function(){
+    $('#body-text-btn').click();
+    $('#body-text-font-btn').click();
+  });
+
+  $('#footer-click').on('click', function(){
+    $('#footer-text-btn').click();
+    $('#footer-text-font-btn').click();
+  });
+
+  $('#author-click').on('click', function(){
+    $('#author-text-btn').click();
+    $('#author-text-font-btn').click();
+  });
 }
 
 // Function to save the meme that is fired on clicking button
 function saveMeme(event){
+  closecontainers();
 	event.preventDefault();
   canvas.deactivateAllWithDispatch().renderAll();
 	// Basic validation to check name isn't empty, probably need more validation
