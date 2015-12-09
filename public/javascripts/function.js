@@ -1018,11 +1018,9 @@ function switchCanvasSize() {
   switch(selection){
     case "Facebook":
       sizecanvas(1024,512);
-      zoomIt(.9);
     break;
     case "Twitter":
       sizecanvas(1024,512);
-      zoomIt(.9);
     break;
     case "Instagram":
       sizecanvas(612,612);
