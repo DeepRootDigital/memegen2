@@ -183,7 +183,7 @@ function generateTemplate(overlayWidth, templateType) {
     img.opacity = logoImgOpacity;
     if(logoImgGrayscale)
       img.filters.push(new fabric.Image.filters.Grayscale());
-    
+
     if(objects[objectIndex("logo")].objObject) 
       return;
     
