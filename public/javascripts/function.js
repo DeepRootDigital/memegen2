@@ -271,6 +271,12 @@ function canvasBindings() {
     var fontColor = document.getElementById("author-text-rgb").value;
     changeFont(a.currentTarget.className, fontSize,fontColor);
   });
+    $('#domain-text-font-btn').on('click', function(a) {
+    var fontSize = document.getElementById("domain-text-font-size").value;
+    var fontColor = document.getElementById("domain-text-rgb").value;
+    changeFont(a.currentTarget.className, fontSize,fontColor);
+  });
+
   $('#body-click').on('click', function(){
     $('#body-text-btn').click();
     $('#body-text-font-btn').click();
@@ -285,6 +291,10 @@ function canvasBindings() {
   $('#author-click').on('click', function(){
     $('#author-text-btn').click();
     $('#author-text-font-btn').click();
+  });
+
+  $('#domain-click').on('click', function(){
+    $('#domain-text-font-btn').click();
   });
 }
 
@@ -888,29 +898,32 @@ function populateEditor() {
   else {
     logoURL = "icons/" + profileList[index].logo;
     domainName = profileList[index].domainName;
-    overlayColor = hexToRgb(profileList[index].overlayColor, .85);
+    overlayColor = hexToRgb(profileList[index].overlayColor, .95);
     fontColor = hexToRgb(profileList[index].fontColor, 1);
-    bodyColor = footerColor = authorColor = fontColor;
+    bodyColor = footerColor = authorColor = domainColor = fontColor;
     fontType = profileList[index].fontType;
     document.getElementById("profile-choice").selectedIndex = index;
     document.getElementById("rgb-value").value = profileList[index].overlayColor;
     document.getElementById("body-text-rgb").value = profileList[index].fontColor;
     document.getElementById("footer-text-rgb").value = profileList[index].fontColor;
     document.getElementById("author-text-rgb").value = profileList[index].fontColor;
+    document.getElementById("domain-text-rgb").value = profileList[index].fontColor;
     document.getElementById("rgb-value").style.backgroundColor = "#" + profileList[index].overlayColor;
     document.getElementById("body-text-rgb").style.backgroundColor = "#" + profileList[index].fontColor;
     document.getElementById("footer-text-rgb").style.backgroundColor = "#" + profileList[index].fontColor;
     document.getElementById("author-text-rgb").style.backgroundColor = "#" + profileList[index].fontColor;    
+    document.getElementById("domain-text-rgb").style.backgroundColor = "#" + profileList[index].fontColor;    
   }
 
   document.getElementById("body-text").value = bodyText;
   document.getElementById("footer-text").value = footerText;
   document.getElementById("author-text").value = authorText;
   document.getElementById("overlay-input").value = overlaySize * 100;
-  document.getElementById("opacity-value").value = .85;
+  document.getElementById("opacity-value").value = .95;
   document.getElementById("body-text-font-size").value = bodyTextSize;
   document.getElementById("footer-text-font-size").value = footerTextSize;
   document.getElementById("author-text-font-size").value = authorTextSize;
+  document.getElementById("domain-text-font-size").value = domainTextSize;
 
 
   switchCanvasSize();
@@ -1077,6 +1090,12 @@ function changeFont(textType, fontSize, fontColor) {
     case "authorText":
       authorTextSize = fontSize;
       authorColor = hexToRgb(fontColor,1);
+    break;
+
+    case "domainText":
+    console.log(fontSize);
+      domainTextSize = fontSize;
+      domainColor = hexToRgb(fontColor,1);
     break;
   }
 

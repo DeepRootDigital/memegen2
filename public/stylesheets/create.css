@@ -528,6 +528,15 @@
   display: none;
 }
 
+#domain-text-font-btn {
+  display: none;
+}
+
+#domain-text-btn {
+  margin-top: -25px;
+  display: none;
+}
+
 #author-text-btn {
   margin-top: -25px;
   display: none;

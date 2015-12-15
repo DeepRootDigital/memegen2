@@ -4,17 +4,18 @@
 var canvasWidth = 0;
 var canvasHeight = 0;
 var objects = [];
-var overlaySize = .75;
-var overlayColor = "rgba(255,0,0,0.85)";
+var overlaySize = .35;
+var overlayColor = "rgba(255,0,0,0.95)";
 var fontColor = "rgba(255,255,255,.75)";
 var fontType = "";
 var bodyColor = "rgba(255,255,255,.75)";
 var footerColor = "rgba(255,255,255,.75)";
 var authorColor = "rgba(255,255,255,.75)";
+var domainColor = "rgba(255,255,255,.75)";
 var bodyTextSize = 25;
 var footerTextSize = 18;
 var authorTextSize = 16;
-var domainFontSize = 20;
+var domainTextSize = 20;
 var domainName = "businessonmarketst.com";
 var logoURL = "icons/bms_logo.png";
 var canvasBackground = "bg/colpan_gaslamp.jpg";
@@ -94,6 +95,8 @@ function generateTemplate(overlayWidth, templateType) {
   }
 
   var overlay = new CanvasObject("overlayBox", "OVERLAY", rect);
+  overlay.hasControls = false;
+  overlay.hasBorders = false;
 
   var adjustedWidth = rect.width;
   if(adjustedWidth == 0)
@@ -105,7 +108,9 @@ function generateTemplate(overlayWidth, templateType) {
     height: 1,
     fill: "rgba(0,0,0,0)",
     top: rect.top + 40,
-    left: rect.left + (lineWidth * .10)
+    left: rect.left + (lineWidth * .10),
+    hasControls: false,
+    hasBorders: false
   });
 
   var topHR = new CanvasObject("topHR", "HR", line);
@@ -115,7 +120,9 @@ function generateTemplate(overlayWidth, templateType) {
     fontSize: bodyTextSize,
     fill: bodyColor,
     top: line.top + 5,
-    left: line.left
+    left: line.left,
+    hasControls: false,
+    hasBorders: false
   });
 
   var body = new CanvasObject("bodyText", "TEXT", text);
@@ -125,7 +132,9 @@ function generateTemplate(overlayWidth, templateType) {
     height: 3,
     fill: "rgba(0,0,0,0)",
     top: text.top + text.height + 5,
-    left: line.left
+    left: line.left,
+    hasControls: false,
+    hasBorders: false
   });
 
   var botHR = new CanvasObject("botHR", "HR", line2);
@@ -135,7 +144,9 @@ function generateTemplate(overlayWidth, templateType) {
     fontSize: footerTextSize,
     fill: footerColor,
     top: line2.top + 10,
-    left: line.left
+    left: line.left,
+    hasControls: false,
+    hasBorders: false
   });
 
   var footer = new CanvasObject("footerText", "TEXT", text2);
@@ -145,7 +156,9 @@ function generateTemplate(overlayWidth, templateType) {
     fontSize: authorTextSize,
     fill: authorColor,
     top: text2.top + text2.height + 3,
-    left: line.left
+    left: line.left,
+    hasControls: false,
+    hasBorders: false
   });
 
   var footerAuthorText = new CanvasObject("authorText", "TEXT", text3);
@@ -156,15 +169,13 @@ function generateTemplate(overlayWidth, templateType) {
 
   var domain = new fabric.Text(domainName, {
     fontFamily: fontType,
-    fontSize: domainFontSize,
-    fill: bodyColor,
+    fontSize: domainTextSize,
+    fill: domainColor,
     top: topHeight,
-    left: line.left
+    left: line.left,
+    hasControls: false,
+    hasBorders: false
   });
-  
-  if(domain.width > rect.width) {
-      domain.setFontSize (0.8 * domainFontSize);
-  }
 
   var domainText = new CanvasObject("domainText", "TEXT", domain);
 
@@ -181,6 +192,8 @@ function generateTemplate(overlayWidth, templateType) {
     img.top = domain.top - (img.height + 5);
     img.left = domain.left;
     img.opacity = logoImgOpacity;
+    img.hasBorders = false;
+    img.hasControls = false;
     if(logoImgGrayscale)
       img.filters.push(new fabric.Image.filters.Grayscale());
 
@@ -199,6 +212,8 @@ function generateTemplate(overlayWidth, templateType) {
     img.width = canvasWidth;
     img.height = canvasHeight;
     img.opacity = bgImgOpacity;
+    img.hasBorders = false;
+    img.hasControls = false;
     if(bgImgGrayscale)
       img.filters.push(new fabric.Image.filters.Grayscale());
 
