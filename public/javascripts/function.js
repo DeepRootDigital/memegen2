@@ -1017,7 +1017,7 @@ function switchCanvasSize() {
   var selection = $('#picture-size').find('option:selected')[0].value;
   switch(selection){
     case "Facebook":
-      sizecanvas(1240,718);
+      sizecanvas(1024,512);
     break;
     case "Twitter":
       sizecanvas(1024,512);
