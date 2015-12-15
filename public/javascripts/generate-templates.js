@@ -103,7 +103,7 @@ function generateTemplate(overlayWidth, templateType) {
   var line = new fabric.Rect({
     width: lineWidth,
     height: 1,
-    fill: bodyColor,
+    fill: "rgba(0,0,0,0)",
     top: rect.top + 40,
     left: rect.left + (lineWidth * .10)
   });
@@ -123,7 +123,7 @@ function generateTemplate(overlayWidth, templateType) {
   var line2 = new fabric.Rect({
     width: lineWidth,
     height: 3,
-    fill: bodyColor,
+    fill: "rgba(0,0,0,0)",
     top: text.top + text.height + 5,
     left: line.left
   });
